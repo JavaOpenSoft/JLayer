@@ -63,9 +63,9 @@ public class Decoder implements DecoderErrors
 	private int						outputFrequency;
 	private int						outputChannels;
 	
-	private final Equalizer				equalizer = new Equalizer();
+	private Equalizer				equalizer = new Equalizer();
 	
-	private final Params					params;
+	private Params					params;
 	
 	private boolean					initialized;
 		
@@ -164,7 +164,6 @@ public class Decoder implements DecoderErrors
 	 * Retrieves the sample frequency of the PCM samples output
 	 * by this decoder. This typically corresponds to the sample
 	 * rate encoded in the MPEG audio stream.
-	 *
 	 */
 	public int getOutputFrequency()
 	{
@@ -256,7 +255,9 @@ public class Decoder implements DecoderErrors
 		return decoder;
 	}
 	
-	private void initialize(Header header) {
+	private void initialize(Header header)
+		throws DecoderException
+	{
 		
 		// REVIEW: allow customizable scale factor
 		float scalefactor = 32700.0f;
@@ -293,7 +294,7 @@ public class Decoder implements DecoderErrors
 	{
 		private OutputChannels	outputChannels = OutputChannels.BOTH;
 		
-		private final Equalizer		equalizer = new Equalizer();
+		private Equalizer		equalizer = new Equalizer();
 		
 		public Params()
 		{			
@@ -343,6 +344,6 @@ public class Decoder implements DecoderErrors
 			return equalizer;	
 		}
 				
-	}
+	};
 }
 

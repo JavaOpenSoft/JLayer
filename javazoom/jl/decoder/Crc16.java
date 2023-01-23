@@ -29,7 +29,7 @@ package javazoom.jl.decoder;
  */
 public final class Crc16
 {
-  private static final short polynomial=(short)0x8005;
+  private static	short polynomial=(short)0x8005;
   private			short crc;
 
   /**
@@ -41,7 +41,7 @@ public final class Crc16
   }
 
   /**
-   * Feed a bit-string to the crc calculation.
+   * Feed a bitstring to the crc calculation.
    */
   public void add_bits (int bitstring, int length)
   {
