@@ -68,7 +68,7 @@ public final class Header
 	private int				h_number_of_subbands, h_intensity_stereo_bound;
 	private boolean			h_copyright, h_original;
 	// VBR support added by E.B
-	private final double[] 		h_vbr_time_per_frame = {-1, 384, 1152, 1152};
+	private double[] 		h_vbr_time_per_frame = {-1, 384, 1152, 1152};
 	private boolean			h_vbr;
 	private int				h_vbr_frames;
 	private int				h_vbr_scale;
@@ -211,7 +211,7 @@ public final class Header
 			crcp[0] = null;
 		if (h_sample_frequency == FOURTYFOUR_POINT_ONE)
 		{
-
+			/*
 				if (offset == null)
 			  {
 				  int max = max_number_of_frames(stream);
@@ -229,7 +229,7 @@ public final class Header
 			  {
 				       offset[0] = h_padding_bit;
 			  }
-
+			*/
 		}
 	}
 
@@ -242,7 +242,7 @@ public final class Header
 	{
 		// Trying Xing header.
 		String xing = "Xing";
-		byte[] tmp = new byte[4];
+		byte tmp[] = new byte[4];
 		int offset = 0;
 		// Compute "Xing" offset depending on MPEG version and channels.
 		if (h_version == MPEG1) 
@@ -270,11 +270,11 @@ public final class Header
 								
 				int length = 4;
 				// Read flags.
-				byte[] flags = new byte[4];
+				byte flags[] = new byte[4];
 				System.arraycopy(firstframe, offset + length, flags, 0, flags.length);
 				length += flags.length;
 				// Read number of frames (if available).
-				if ((flags[3] & (byte) (1)) != 0)
+				if ((flags[3] & (byte) (1 << 0)) != 0)
 				{
 					System.arraycopy(firstframe, offset + length, tmp, 0, tmp.length);
 					h_vbr_frames = (tmp[0] << 24)&0xFF000000 | (tmp[1] << 16)&0x00FF0000 | (tmp[2] << 8)&0x0000FF00 | tmp[3]&0x000000FF;
@@ -379,7 +379,8 @@ public final class Header
 	 */
 	public boolean checksums()
 	{
-		return h_protection_bit == 0;
+		if (h_protection_bit == 0) return true;
+	  else return false;
 	}
 
 	/**
@@ -422,7 +423,8 @@ public final class Header
 	 */
 	public boolean padding()
 	{
-		return h_padding_bit != 0;
+		if (h_padding_bit == 0) return false;
+	  else return true;
 	}
 
 	/**
@@ -436,7 +438,7 @@ public final class Header
 	public int mode_extension() { return h_mode_extension; }
 
 	// E.B -> private to public
-	public static final int[][][] bitrates = {
+	public static final int bitrates[][][] = {
 		{{0 /*free format*/, 32000, 48000, 56000, 64000, 80000, 96000,
 	  112000, 128000, 144000, 160000, 176000, 192000 ,224000, 256000, 0},
 	 	{0 /*free format*/, 8000, 16000, 24000, 32000, 40000, 48000,
@@ -514,7 +516,7 @@ public final class Header
 	 */
 	public int max_number_of_frames(int streamsize)  // E.B
 	{
-		if (h_vbr) return h_vbr_frames;
+		if (h_vbr == true) return h_vbr_frames;
 		else
 		{
 			if ((framesize + 4 - h_padding_bit) == 0) return 0;
@@ -529,7 +531,7 @@ public final class Header
 	 */
 	public int min_number_of_frames(int streamsize) // E.B
 	{
-		if (h_vbr) return h_vbr_frames;
+		if (h_vbr == true) return h_vbr_frames;
 		else
 		{
 	  		if ((framesize + 5 - h_padding_bit) == 0) return 0;
@@ -544,7 +546,7 @@ public final class Header
 	 */
 	public float ms_per_frame() // E.B
 	{
-		if (h_vbr)
+		if (h_vbr == true)
 		{			
 			double tpf = h_vbr_time_per_frame[layer()] / frequency();
 			if ((h_version == MPEG2_LSF) || (h_version == MPEG25_LSF)) tpf /= 2;
@@ -552,7 +554,7 @@ public final class Header
 		}
 		else
 		{
-			float[][] ms_per_frame_array = {{8.707483f,  8.0f, 12.0f},
+			float ms_per_frame_array[][] = {{8.707483f,  8.0f, 12.0f},
 											{26.12245f, 24.0f, 36.0f},
 											{26.12245f, 24.0f, 36.0f}};
 			return(ms_per_frame_array[h_layer-1][h_sample_frequency]);
@@ -577,7 +579,7 @@ public final class Header
 		return _headerstring;
 	}
 
-	// functions which return header information as strings:
+	// functions which return header informations as strings:
 	/**
 	 * Return Layer version.
 	 */
@@ -592,7 +594,7 @@ public final class Header
 	}
 
 	// E.B -> private to public
-	public static final String[][][] bitrate_str = {
+	public static final String bitrate_str[][][] = {
 		{{"free format", "32 kbit/s", "48 kbit/s", "56 kbit/s", "64 kbit/s",
 	  "80 kbit/s", "96 kbit/s", "112 kbit/s", "128 kbit/s", "144 kbit/s",
 	  "160 kbit/s", "176 kbit/s", "192 kbit/s", "224 kbit/s", "256 kbit/s",
@@ -639,9 +641,9 @@ public final class Header
 	 */
 	public String bitrate_string()
 	{
-		if (h_vbr)
+		if (h_vbr == true)
 		{
-			return bitrate() / 1000 +" kb/s";
+			return Integer.toString(bitrate()/1000)+" kb/s";		
 		}
 	  else return bitrate_str[h_version][h_layer - 1][h_bitrate_index];
 	}
@@ -652,7 +654,7 @@ public final class Header
 	 */
 	public int bitrate()
 	{
-		if (h_vbr)
+		if (h_vbr == true)
 		{
 			return ((int) ((h_vbr_bytes * 8) / (ms_per_frame() * h_vbr_frames)))*1000;		
 		}

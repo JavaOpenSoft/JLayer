@@ -83,7 +83,7 @@ public class WaveFile extends RiffFile
 
              data.nBlockAlign == ( data.nChannels *
                                    data.nBitsPerSample ) / 8;
-            if (ret) return 1;
+            if (ret == true) return 1;
             else return 0;
    		}
 	}
@@ -96,8 +96,8 @@ public class WaveFile extends RiffFile
 		{chan = new short[WaveFile.MAX_WAVE_CHANNELS];}
 	}
 
-   private final WaveFormat_Chunk   	 wave_format;
-   private final RiffChunkHeader    	 pcm_data;
+   private WaveFormat_Chunk   	 wave_format;
+   private RiffChunkHeader    	 pcm_data;
    private long            		 pcm_data_offset = 0;  // offset of 'pcm_data' in output file
    private int 	           		 num_samples = 0;
 
@@ -189,9 +189,32 @@ public class WaveFile extends RiffFile
             retcode = Write (wave_format.data.nAvgBytesPerSec, 4);
             retcode = Write (wave_format.data.nBlockAlign, 2);
             retcode = Write (wave_format.data.nBitsPerSample, 2);
+            /* byte[] br = new byte[16];
+	        br[0] = (byte) ((wave_format.data.wFormatTag >> 8) & 0x00FF);
+        	br[1] = (byte) (wave_format.data.wFormatTag & 0x00FF);
+	  
+        	br[2] = (byte) ((wave_format.data.nChannels >> 8) & 0x00FF);
+	        br[3] = (byte) (wave_format.data.nChannels & 0x00FF);
+	  
+	        br[4] = (byte) ((wave_format.data.nSamplesPerSec >> 24)& 0x000000FF);
+	        br[5] = (byte) ((wave_format.data.nSamplesPerSec >> 16)& 0x000000FF);
+	        br[6] = (byte) ((wave_format.data.nSamplesPerSec >> 8)& 0x000000FF);
+	        br[7] = (byte) (wave_format.data.nSamplesPerSec & 0x000000FF);
+	  
+	        br[8] = (byte) ((wave_format.data.nAvgBytesPerSec>> 24)& 0x000000FF);
+	        br[9] = (byte) ((wave_format.data.nAvgBytesPerSec >> 16)& 0x000000FF);
+	        br[10] = (byte) ((wave_format.data.nAvgBytesPerSec >> 8)& 0x000000FF);
+	        br[11] = (byte) (wave_format.data.nAvgBytesPerSec & 0x000000FF);
 
-
-			if ( retcode == DDC_SUCCESS )
+	        br[12] = (byte) ((wave_format.data.nBlockAlign >> 8) & 0x00FF);
+	        br[13] = (byte) (wave_format.data.nBlockAlign & 0x00FF);
+	  
+	        br[14] = (byte) ((wave_format.data.nBitsPerSample >> 8) & 0x00FF);
+	        br[15] = (byte) (wave_format.data.nBitsPerSample & 0x00FF);   		 	
+   		 	retcode = Write (br, 16); */
+   		 	
+   
+   		 	if ( retcode == DDC_SUCCESS )
    		 	{
    				pcm_data_offset = CurrentFilePosition();
    				retcode = Write ( pcm_data, 8 );
@@ -487,5 +510,13 @@ public class WaveFile extends RiffFile
    {
       return super.CurrentFilePosition();
    }
+
+   /* public int FourCC(String ChunkName)
+   {
+      byte[] p = {0x20,0x20,0x20,0x20};
+	  ChunkName.getBytes(0,4,p,0);
+	  int ret = (((p[0] << 24)& 0xFF000000) | ((p[1] << 16)&0x00FF0000) | ((p[2] << 8)&0x0000FF00) | (p[3]&0x000000FF));
+      return ret;
+   }*/
 
 }

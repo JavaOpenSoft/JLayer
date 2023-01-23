@@ -72,7 +72,8 @@ public class JavaSoundAudioDevice extends AudioDeviceBase
 	{
 		AudioFormat fmt = getAudioFormat();
 		//DataLine.Info info = new DataLine.Info(SourceDataLine.class, fmt, 4000);
-		return new javax.sound.sampled.DataLine.Info(javax.sound.sampled.SourceDataLine.class, fmt);
+		DataLine.Info info = new DataLine.Info(SourceDataLine.class, fmt);
+		return info;
 	}
 
 	public void open(AudioFormat fmt) throws JavaLayerException
@@ -85,7 +86,9 @@ public class JavaSoundAudioDevice extends AudioDeviceBase
 		}
 	}
 
-	protected void openImpl() {
+	protected void openImpl()
+		throws JavaLayerException
+	{
 	}
 
 
@@ -101,7 +104,13 @@ public class JavaSoundAudioDevice extends AudioDeviceBase
          		source = (SourceDataLine)line;
                 //source.open(fmt, millisecondsToBytes(fmt, 2000));
 				source.open(fmt);
-				source.start();
+                /*
+                if (source.isControlSupported(FloatControl.Type.MASTER_GAIN))
+                {
+					FloatControl c = (FloatControl)source.getControl(FloatControl.Type.MASTER_GAIN);
+                    c.setValue(c.getMaximum());
+                }*/
+                source.start();
 
             }
         } catch (RuntimeException | javax.sound.sampled.LineUnavailableException | LinkageError ex)
@@ -112,7 +121,8 @@ public class JavaSoundAudioDevice extends AudioDeviceBase
     }
 
     protected Line createLine() throws LineUnavailableException {
-		return javax.sound.sampled.AudioSystem.getLine(getSourceLineInfo());
+        Line line = AudioSystem.getLine(getSourceLineInfo());
+        return line;
     }
 
 	public int millisecondsToBytes(AudioFormat fmt, int time)

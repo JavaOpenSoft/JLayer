@@ -31,15 +31,15 @@ import javazoom.jl.player.AudioDevice;
 import javazoom.jl.player.FactoryRegistry;
 
 /**
- * a hybrid of javazoom.jl.player.Player tweaked to include <code>play(startFrame, endFrame)</code>
+ * a hybrid of javazoom.jl.player.Player tweeked to include <code>play(startFrame, endFrame)</code>
  * hopefully this will be included in the api
  */
 public class AdvancedPlayer
 {
 	/** The MPEG audio bitstream.*/
-	private final Bitstream bitstream;
+	private Bitstream bitstream;
 	/** The MPEG audio decoder. */
-	private final Decoder decoder;
+	private Decoder decoder;
 	/** The AudioDevice the audio samples are written to. */
 	private AudioDevice audio;
 	/** Has the player been closed? */
@@ -51,21 +51,13 @@ public class AdvancedPlayer
 	private PlaybackListener listener;
 
 	/**
-	 * Creates a new {@code Player} instance.
-	 * @param stream (InputStream)
-	 * @throws JavaLayerException .
+	 * Creates a new <code>Player</code> instance.
 	 */
 	public AdvancedPlayer(InputStream stream) throws JavaLayerException
 	{
 		this(stream, null);
 	}
 
-	/**
-	 *
-	 * @param stream (InputStream)
-	 * @param device .
-	 * @throws JavaLayerException .
-	 */
 	public AdvancedPlayer(InputStream stream, AudioDevice device) throws JavaLayerException
 	{
 		bitstream = new Bitstream(stream);
@@ -75,10 +67,6 @@ public class AdvancedPlayer
 		audio.open(decoder = new Decoder());
 	}
 
-	/**
-	 *
-	 * @throws JavaLayerException .
-	 */
 	public void play() throws JavaLayerException
 	{
 		play(Integer.MAX_VALUE);
@@ -90,7 +78,6 @@ public class AdvancedPlayer
 	 * @param frames	The number of frames to play.
 	 * @return	true if the last frame was played, or false if there are
 	 *			more frames.
-	 * @throws JavaLayerException .
 	 */
 	public boolean play(int frames) throws JavaLayerException
 	{
@@ -127,7 +114,7 @@ public class AdvancedPlayer
 	}
 
 	/**
-	 * Closes this player. Any audio currently playing is stopped
+	 * Cloases this player. Any audio currently playing is stopped
 	 * immediately.
 	 */
 	public synchronized void close()
@@ -145,14 +132,14 @@ public class AdvancedPlayer
 			{
 				bitstream.close();
 			}
-			catch (BitstreamException ignored)
+			catch (BitstreamException ex)
 			{}
 		}
 	}
 
 	/**
 	 * Decodes a single frame.
-	 * @throws JavaLayerException .
+	 *
 	 * @return true if there are no more frames to decode, false otherwise.
 	 */
 	protected boolean decodeFrame() throws JavaLayerException
@@ -189,7 +176,6 @@ public class AdvancedPlayer
 	/**
 	 * skips over a single frame
 	 * @return false	if there are no more frames to decode, true otherwise.
-	 * @throws JavaLayerException .
 	 */
 	protected boolean skipFrame() throws JavaLayerException
 	{
@@ -204,7 +190,6 @@ public class AdvancedPlayer
 	 * @param start	The first frame to play
 	 * @param end		The last frame to play
 	 * @return true if the last frame was played, or false if there are more frames.
-	 * @throws JavaLayerException .
 	 */
 	public boolean play(final int start, final int end) throws JavaLayerException
 	{
@@ -231,8 +216,7 @@ public class AdvancedPlayer
 	}
 
 	/**
-	 * sets the {@code PlaybackListener}
-	 * @param listener the {@code PlaybackListener}
+	 * sets the <code>PlaybackListener</code>
 	 */
 	public void setPlayBackListener(PlaybackListener listener)
 	{
@@ -240,8 +224,7 @@ public class AdvancedPlayer
 	}
 
 	/**
-	 * gets the {@code PlaybackListener}
-	 * @return PlaybackListener
+	 * gets the <code>PlaybackListener</code>
 	 */
 	public PlaybackListener getPlayBackListener()
 	{
@@ -249,7 +232,7 @@ public class AdvancedPlayer
 	}
 
 	/**
-	 * closes the player and notifies {@code PlaybackListener}
+	 * closes the player and notifies <code>PlaybackListener</code>
 	 */
 	public void stop()
 	{

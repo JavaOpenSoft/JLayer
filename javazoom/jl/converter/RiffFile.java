@@ -57,7 +57,7 @@ public class RiffFile
    public static final int	RFM_WRITE = 1;        	   // open for write
    public static final int	RFM_READ = 2;         	   // open for read
 
-   private final RiffChunkHeader   	riff_header;      // header for whole file
+   private RiffChunkHeader   	riff_header;      // header for whole file
    protected int      			fmode;            // current file I/O mode
    protected RandomAccessFile 	file;             // I/O stream to use
 
@@ -467,8 +467,9 @@ public class RiffFile
    public static int FourCC(String ChunkName)
    {
       byte[] p = {0x20,0x20,0x20,0x20};
-	  ChunkName.getBytes(0, 4, p, 0);
-	   return (((p[0] << 24)& 0xFF000000) | ((p[1] << 16)&0x00FF0000) | ((p[2] << 8)&0x0000FF00) | (p[3]&0x000000FF));
+	  ChunkName.getBytes(0,4,p,0);
+	  int ret = (((p[0] << 24)& 0xFF000000) | ((p[1] << 16)&0x00FF0000) | ((p[2] << 8)&0x0000FF00) | (p[3]&0x000000FF));
+      return ret;
    }
 
 }

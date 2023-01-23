@@ -11,7 +11,7 @@
  *  @(#) Copyright (C) 1993, 1994 Tobias Bading (bading@cs.tu-berlin.de)
  *  @(#) Berlin University of Technology
  *
- *  Idea and first implementation for u-law output with fast down sampling by
+ *  Idea and first implementation for u-law output with fast downsampling by
  *  Jim Boucher (jboucher@flash.bu.edu)
  *
  *  LinuxObuffer class written by

@@ -54,6 +54,8 @@ public class InputStreamSource implements Source
 	public boolean willReadBlock()
 	{
 		return true;
+		//boolean block = (in.available()==0);
+		//return block;
 	}
 	
 	public boolean isSeekable()

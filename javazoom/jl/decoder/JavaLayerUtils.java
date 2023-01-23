@@ -118,7 +118,7 @@ public class JavaLayerUtils
 		
 		Object obj = deserialize(in);
 		
-		Class cls = obj.getClass();
+		Class<? extends Object> cls = obj.getClass();
 		
 		
 		if (!cls.isArray())
@@ -144,8 +144,10 @@ public class JavaLayerUtils
 		InputStream str = getResourceAsStream(name);
 		if (str==null)
 			throw new IOException("unable to load resource '"+name+"'");
-
-		return deserializeArray(str, elemType, length);
+		
+		Object obj = deserializeArray(str, elemType, length);
+		
+		return obj;
 	}	
 	
 	static public void serialize(OutputStream out, Object obj)
@@ -196,7 +198,7 @@ public class JavaLayerUtils
 		}
 		else
 		{
-			Class cls = JavaLayerUtils.class;
+			Class<JavaLayerUtils> cls = JavaLayerUtils.class;
 			is = cls.getResourceAsStream(name);
 		}
 		

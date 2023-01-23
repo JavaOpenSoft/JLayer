@@ -27,7 +27,7 @@
 package javazoom.jl.decoder;
 
 /**
- * Implements decoding of multiple MPEG Audio Layer I frames.
+ * Implements decoding of MPEG Audio Layer I frames. 
  */
 class LayerIDecoder implements FrameDecoder
 {
@@ -144,17 +144,17 @@ class LayerIDecoder implements FrameDecoder
 	}
 
 	/**
-	 * Abstract base class for suburban classes of layer I and II
+	 * Abstract base class for subband classes of layer I and II
 	 */
 	static abstract class Subband
 	{
 	 /*
 	  *  Changes from version 1.1 to 1.2:
-	  *    - array size increased by one, although a scale factor with index 63
+	  *    - array size increased by one, although a scalefactor with index 63
 	  *      is illegal (to prevent segmentation faults)
 	  */
-	  // Scale-factors for layer I and II, Annex 3-B.1 in ISO/IEC DIS 11172:
-	  public static final float[] scalefactors =
+	  // Scalefactors for layer I and II, Annex 3-B.1 in ISO/IEC DIS 11172:
+	  public static final float scalefactors[] =
 	  {
 	  2.00000000000000f, 1.58740105196820f, 1.25992104989487f, 1.00000000000000f,
 	  0.79370052598410f, 0.62996052494744f, 0.50000000000000f, 0.39685026299205f,
@@ -171,25 +171,25 @@ class LayerIDecoder implements FrameDecoder
 	  0.00003051757813f, 0.00002422181781f, 0.00001922486954f, 0.00001525878906f,
 	  0.00001211090890f, 0.00000961243477f, 0.00000762939453f, 0.00000605545445f,
 	  0.00000480621738f, 0.00000381469727f, 0.00000302772723f, 0.00000240310869f,
-	  0.00000190734863f, 0.00000151386361f, 0.00000120155435f, 0.00000000000000f /* illegal scale factor */
+	  0.00000190734863f, 0.00000151386361f, 0.00000120155435f, 0.00000000000000f /* illegal scalefactor */
 	  };
 
 	  public abstract void read_allocation (Bitstream stream, Header header, Crc16 crc) throws DecoderException;
 	  public abstract void read_scalefactor (Bitstream stream, Header header);
 	  public abstract boolean read_sampledata (Bitstream stream);
 	  public abstract boolean put_next_sample (int channels, SynthesisFilter filter1, SynthesisFilter filter2);
-	}
-
+	};
+	
 	/**
-	 * Class for layer I sub-bands in single channel mode.
+	 * Class for layer I subbands in single channel mode.
 	 * Used for single channel mode
 	 * and in derived class for intensity stereo mode
 	 */
 	static class SubbandLayer1 extends Subband
 	{
 
-	  // Factors and offsets for sample quantization
-	  public static final float[] table_factor = {
+	  // Factors and offsets for sample requantization
+	  public static final float table_factor[] = {
 	   0.0f, (1.0f/2.0f) * (4.0f/3.0f), (1.0f/4.0f) * (8.0f/7.0f), (1.0f/8.0f) * (16.0f/15.0f),
 	  (1.0f/16.0f) * (32.0f/31.0f), (1.0f/32.0f) * (64.0f/63.0f), (1.0f/64.0f) * (128.0f/127.0f),
 	  (1.0f/128.0f) * (256.0f/255.0f), (1.0f/256.0f) * (512.0f/511.0f),
@@ -198,7 +198,7 @@ class LayerIDecoder implements FrameDecoder
 	  (1.0f/8192.0f) * (16384.0f/16383.0f), (1.0f/16384.0f) * (32768.0f/32767.0f)
 	  };
 
-	  public static final float[] table_offset = {
+	  public static final float table_offset[] = {
 	   0.0f, ((1.0f/2.0f)-1.0f) * (4.0f/3.0f), ((1.0f/4.0f)-1.0f) * (8.0f/7.0f), ((1.0f/8.0f)-1.0f) * (16.0f/15.0f),
 	  ((1.0f/16.0f)-1.0f) * (32.0f/31.0f), ((1.0f/32.0f)-1.0f) * (64.0f/63.0f), ((1.0f/64.0f)-1.0f) * (128.0f/127.0f),
 	  ((1.0f/128.0f)-1.0f) * (256.0f/255.0f), ((1.0f/256.0f)-1.0f) * (512.0f/511.0f),
@@ -216,7 +216,7 @@ class LayerIDecoder implements FrameDecoder
 	  protected float 		 factor, offset;
 
 	  /**
-	   * Constructor.
+	   * Construtor.
 	   */
 	  public SubbandLayer1(int subbandnumber)
 	  {
@@ -283,10 +283,10 @@ class LayerIDecoder implements FrameDecoder
 	    }
 	    return true;
 	  }
-	}
-
+	};
+	
 	/**
-	 * Class for layer I sub-bands in joint stereo mode.
+	 * Class for layer I subbands in joint stereo mode.
 	 */
 	static class SubbandLayer1IntensityStereo extends SubbandLayer1
 	{
@@ -335,7 +335,7 @@ class LayerIDecoder implements FrameDecoder
 	  {
 	    if (allocation !=0 )
 	    {
-	      sample = sample * factor + offset;		// quantization
+	      sample = sample * factor + offset;		// requantization
 		  if (channels == OutputChannels.BOTH_CHANNELS)
 	      {
 			float sample1 = sample * scalefactor,
@@ -356,10 +356,10 @@ class LayerIDecoder implements FrameDecoder
 	    }
 	    return true;
 	  }
-	}
-
+	};
+	
 	/**
-	 * Class for layer I sub-bands in stereo mode.
+	 * Class for layer I subbands in stereo mode.
 	 */
 	static class SubbandLayer1Stereo extends SubbandLayer1
 	{
@@ -381,7 +381,8 @@ class LayerIDecoder implements FrameDecoder
 	  /**
 	   *
 	   */
-	  public void read_allocation (Bitstream stream, Header header, Crc16 crc) {
+	  public void read_allocation (Bitstream stream, Header header, Crc16 crc) throws DecoderException
+	  {
 	 	 allocation = stream.get_bits(4);
 	     channel2_allocation = stream.get_bits(4);
 	     if (crc != null)
@@ -442,6 +443,6 @@ class LayerIDecoder implements FrameDecoder
 	     }
 	     return true;
 	  }
-	}
-
+	};
+	
 }

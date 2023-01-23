@@ -22,7 +22,7 @@ package javazoom.jl.decoder;
 
 
 /**
- * A Type-safe representation of the supported output channel
+ * A Type-safe representation of the the supported output channel
  * constants. 
  * 
  * This class is immutable and, hence, is thread safe. 
@@ -59,7 +59,7 @@ public class OutputChannels
 	public static final OutputChannels DOWNMIX = new OutputChannels(DOWNMIX_CHANNELS);
 				
 	
-	private final /*final*/ int	outputChannels;
+	private /*final*/ int	outputChannels;
 			
 	/**
 	 * Creates an <code>OutputChannels</code> instance
@@ -111,7 +111,8 @@ public class OutputChannels
 	 */
 	public int getChannelCount()
 	{
-		return (outputChannels==BOTH_CHANNELS) ?  2 : 1;
+		int count = (outputChannels==BOTH_CHANNELS) ?  2 : 1;
+		return count;
 	}
 		
 		

@@ -64,7 +64,7 @@ public class jlap
   public void showUsage()
   {
     System.out.println("Usage: jla <filename>");
-    System.out.println();
+    System.out.println("");
     System.out.println(" e.g. : java javazoom.jl.player.advanced.jlap localfile.mp3");
   }
 
