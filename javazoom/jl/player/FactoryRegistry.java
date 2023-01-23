@@ -20,7 +20,6 @@
 
 package javazoom.jl.player;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
 
 import javazoom.jl.decoder.JavaLayerException;
@@ -38,7 +37,11 @@ import javazoom.jl.decoder.JavaLayerException;
 public class FactoryRegistry extends AudioDeviceFactory
 {
 	static private FactoryRegistry instance = null;
-	
+
+	/**
+	 *
+	 * @return FactoryRegistry
+	 */
 	static synchronized public FactoryRegistry systemRegistry()
 	{
 		if (instance==null)
@@ -49,8 +52,7 @@ public class FactoryRegistry extends AudioDeviceFactory
 		return instance;
 	}
 
-	
-	protected Hashtable factories = new Hashtable();
+	protected java.util.Hashtable<Class<?>, javazoom.jl.player.AudioDeviceFactory> factories = new Hashtable<>();
 	
 	/**
 	 * Registers an <code>AudioDeviceFactory</code> instance
@@ -60,17 +62,30 @@ public class FactoryRegistry extends AudioDeviceFactory
 	{	
 		factories.put(factory.getClass(), factory);						  
 	}
-	
+
+	/**
+	 *
+	 * @param cls
+	 */
 	public void removeFactoryType(Class cls)
 	{
 		factories.remove(cls);
 	}
-	
+
+	/**
+	 *
+	 * @param factory
+	 */
 	public void removeFactory(AudioDeviceFactory factory)
 	{
 		factories.remove(factory.getClass());	
 	}
-	
+
+	/**
+	 *
+	 * @return
+	 * @throws JavaLayerException
+	 */
 	public AudioDevice createAudioDevice() throws JavaLayerException
 	{
 		AudioDevice device = null;
@@ -99,8 +114,11 @@ public class FactoryRegistry extends AudioDeviceFactory
 		
 		return device;
 	}
-	
-	
+
+	/**
+	 *
+	 * @return AudioDeviceFactory[]
+	 */
 	protected AudioDeviceFactory[] getFactoriesPriority()
 	{
 		AudioDeviceFactory[] fa = null;
@@ -111,10 +129,10 @@ public class FactoryRegistry extends AudioDeviceFactory
 			{
 				fa = new AudioDeviceFactory[size];
 				int idx = 0;
-				Enumeration e = factories.elements();
+				java.util.Enumeration<javazoom.jl.player.AudioDeviceFactory> e = factories.elements();
 				while (e.hasMoreElements())
 				{
-					AudioDeviceFactory factory = (AudioDeviceFactory)e.nextElement();
+					AudioDeviceFactory factory = e.nextElement();
 					fa[idx++] = factory;	
 				}
 			}
@@ -122,6 +140,9 @@ public class FactoryRegistry extends AudioDeviceFactory
 		return fa;
 	}
 
+	/**
+	 *
+	 */
 	protected void registerDefaultFactories()
 	{
 		addFactory(new JavaSoundAudioDeviceFactory());

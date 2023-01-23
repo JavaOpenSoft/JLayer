@@ -64,7 +64,7 @@ public class jlap
   public void showUsage()
   {
     System.out.println("Usage: jla <filename>");
-    System.out.println("");
+    System.out.println();
     System.out.println(" e.g. : java javazoom.jl.player.advanced.jlap localfile.mp3");
   }
 
@@ -83,20 +83,16 @@ public class jlap
     final AdvancedPlayer player = new AdvancedPlayer(is);
     player.setPlayBackListener(listener);
     // run in new thread
-    new Thread()
-    {
-      public void run()
+    new Thread(() -> {
+      try
       {
-        try
-        {
-          player.play(start, end);
-        }
-        catch (Exception e)
-        {
-          throw new RuntimeException(e.getMessage());
-        }
+        player.play(start, end);
       }
-    }.start();
+      catch (Exception e)
+      {
+        throw new RuntimeException(e.getMessage());
+      }
+    }).start();
     return player;
   }
 

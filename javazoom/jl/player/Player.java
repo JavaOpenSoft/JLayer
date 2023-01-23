@@ -44,18 +44,18 @@ public class Player
 	/**
 	 * The current frame number. 
 	 */
-	private int frame = 0;
+	private final int frame = 0;
 	
 	/**
 	 * The MPEG audio bitstream. 
 	 */
 	// javac blank final bug. 
-	/*final*/ private Bitstream		bitstream;
+	/*final*/ private final Bitstream		bitstream;
 	
 	/**
 	 * The MPEG audio decoder. 
 	 */
-	/*final*/ private Decoder		decoder; 
+	/*final*/ private final Decoder		decoder;
 	
 	/**
 	 * The AudioDevice the audio samples are written to. 
@@ -138,7 +138,7 @@ public class Player
 	}
 		
 	/**
-	 * Cloases this player. Any audio currently playing is stopped
+	 * Closes this player. Any audio currently playing is stopped
 	 * immediately. 
 	 */
 	public synchronized void close()
@@ -156,7 +156,7 @@ public class Player
 			{
 				bitstream.close();
 			}
-			catch (BitstreamException ex)
+			catch (BitstreamException ignored)
 			{
 			}
 		}

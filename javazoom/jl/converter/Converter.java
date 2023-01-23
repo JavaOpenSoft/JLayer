@@ -128,7 +128,7 @@ public class Converter
 							// REVIEW: Incorrect functionality.
 							// the decoder should provide decoded
 							// frequency and channels output as it may differ from
-							// the source (e.g. when downmixing stereo to mono.)
+							// the source (e.g. when downsizing stereo to mono.)
 							int channels = (header.mode()==Header.SINGLE_CHANNEL) ? 1 : 2;
 							int freq = header.frequency();
 							output = new WaveFileObuffer(channels, freq, destName);
@@ -191,9 +191,8 @@ public class Converter
 		// ensure name is abstract path name
 		File file = new File(fileName);
 		InputStream fileIn = new FileInputStream(file);
-		BufferedInputStream bufIn = new BufferedInputStream(fileIn);
 
-		return bufIn;
+		return new java.io.BufferedInputStream(fileIn);
 	}
 
 
@@ -203,16 +202,16 @@ public class Converter
 	 * and to provide new information as it becomes available.
 	 */
 
-	static public interface ProgressListener
+	public interface ProgressListener
 	{
-		public static final int	UPDATE_FRAME_COUNT = 1;
+		int	UPDATE_FRAME_COUNT = 1;
 
 		/**
 		 * Conversion is complete. Param1 contains the time
 		 * to convert in milliseconds. Param2 contains the number
 		 * of MPEG audio frames converted.
 		 */
-		public static final int UPDATE_CONVERT_COMPLETE = 2;
+		int UPDATE_CONVERT_COMPLETE = 2;
 
 
 		/**
@@ -230,13 +229,13 @@ public class Converter
 		 * UPDATE_CONVERT_COMPLETE: param1 is the conversion time, param2
 		 *		is the number of frames converted.
 		 */
-		public void converterUpdate(int updateID, int param1, int param2);
+		void converterUpdate(int updateID, int param1, int param2);
 
 		/**
 		 * If the converter wishes to make a first pass over the
 		 * audio frames, this is called as each frame is parsed.
 		 */
-		public void parsedFrame(int frameNo, Header header);
+		void parsedFrame(int frameNo, Header header);
 
 		/**
 		 * This method is called after each frame has been read,
@@ -245,7 +244,7 @@ public class Converter
 		 * @param frameNo	The 0-based sequence number of the frame.
 		 * @param header	The Header rerpesenting the frame just read.
 		 */
-		public void readFrame(int frameNo, Header header);
+		void readFrame(int frameNo, Header header);
 
 		/**
 		 * This method is called after a frame has been decoded.
@@ -254,7 +253,7 @@ public class Converter
 		 * @param header	The Header rerpesenting the frame just read.
 		 * @param o			The Obuffer the deocded data was written to.
 		 */
-		public void decodedFrame(int frameNo, Header header, Obuffer o);
+		void decodedFrame(int frameNo, Header header, Obuffer o);
 
 		/**
 		 * Called when an exception is thrown during while converting
@@ -271,7 +270,7 @@ public class Converter
 		 * <code>true</code> is returned, the exception is silently
 		 * ignored and the converter moves onto the next frame.
 		 */
-		public boolean converterException(Throwable t);
+		boolean converterException(Throwable t);
 
 	}
 
@@ -303,9 +302,9 @@ public class Converter
 
 		static public final int MAX_DETAIL = 10;
 
-		private PrintWriter pw;
+		private final PrintWriter pw;
 
-		private int detailLevel;
+		private final int detailLevel;
 
 		static public PrintWriterProgressListener newStdOut(int detail)
 		{
@@ -329,16 +328,13 @@ public class Converter
 		{
 			if (isDetail(VERBOSE_DETAIL))
 			{
-				switch (updateID)
-				{
-				case UPDATE_CONVERT_COMPLETE:
-					// catch divide by zero errors.
-					if (param2==0)
+				if (updateID == UPDATE_CONVERT_COMPLETE) {// catch divide by zero errors.
+					if (param2 == 0)
 						param2 = 1;
 
 					pw.println();
-					pw.println("Converted "+param2+" frames in "+param1+" ms ("+
-							   (param1/param2)+" ms per frame.)");
+					pw.println("Converted " + param2 + " frames in " + param1 + " ms (" +
+							(param1 / param2) + " ms per frame.)");
 				}
 			}
 		}

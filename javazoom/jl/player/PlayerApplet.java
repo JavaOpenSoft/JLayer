@@ -133,8 +133,7 @@ public class PlayerApplet extends Applet implements Runnable
 	 * Stops the audio player. If the player is already stopped
 	 * this method is a no-op.  
 	 */
-	protected void stopPlayer() throws JavaLayerException
-	{
+	protected void stopPlayer() {
 		if (player!=null)
 		{
 			player.close();

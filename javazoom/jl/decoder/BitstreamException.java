@@ -26,12 +26,9 @@ package javazoom.jl.decoder;
  * <p>
  * The exception provides details of the exception condition 
  * in two ways:
- * <ol><li>
  *		as an error-code describing the nature of the error
- * </li><br></br><li>
- *		as the <code>Throwable</code> instance, if any, that was thrown
- *		indicating that an exceptional condition has occurred. 
- * </li></ol></p>
+ *		as the {@code Throwable} instance, if any, that was thrown
+ *		indicating that an exceptional condition has occurred.
  * 
  * @since 0.0.6
  * @author MDM	12/12/99

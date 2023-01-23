@@ -57,7 +57,7 @@ public class RiffFile
    public static final int	RFM_WRITE = 1;        	   // open for write
    public static final int	RFM_READ = 2;         	   // open for read
 
-   private RiffChunkHeader   	riff_header;      // header for whole file
+   private final RiffChunkHeader   	riff_header;      // header for whole file
    protected int      			fmode;            // current file I/O mode
    protected RandomAccessFile 	file;             // I/O stream to use
 
@@ -94,73 +94,62 @@ public class RiffFile
    
       if ( retcode == DDC_SUCCESS )
       {
-   	  	switch ( NewMode )
-   	  	{
-   		 case RFM_WRITE:
-			try
-			{	
-				file = new RandomAccessFile(Filename,"rw");
-				
-			    try
-				{
-   				   // Write the RIFF header...
-   				   // We will have to come back later and patch it!
-				   byte[] br = new byte[8];
-				   br[0] = (byte) ((riff_header.ckID >>> 24) & 0x000000FF);
-				   br[1] = (byte) ((riff_header.ckID >>> 16) & 0x000000FF);
-				   br[2] = (byte) ((riff_header.ckID >>> 8) & 0x000000FF);
-				   br[3] = (byte) (riff_header.ckID & 0x000000FF);
-				  
-			       byte br4 = (byte) ((riff_header.ckSize >>> 24)& 0x000000FF);
-				   byte br5 = (byte) ((riff_header.ckSize >>> 16)& 0x000000FF);
-				   byte br6 = (byte) ((riff_header.ckSize >>> 8)& 0x000000FF);
-				   byte br7 = (byte) (riff_header.ckSize & 0x000000FF);
-				   
-				   br[4] = br7;
-				   br[5] = br6;
-				   br[6] = br5;
-				   br[7] = br4;
-				   
-					file.write(br,0,8);
-				   fmode = RFM_WRITE;
-				} catch (IOException ioe)
-				  {
-				    file.close();
-				  	fmode = RFM_UNKNOWN;
-		 		  }
-			} catch (IOException ioe)
-			  {
-			     fmode = RFM_UNKNOWN;
-   				 retcode = DDC_FILE_ERROR;
+		  switch (NewMode) {
+			  case RFM_WRITE -> {
+				  try {
+					  file = new java.io.RandomAccessFile(Filename, "rw");
+
+					  try {
+						  // Write the RIFF header...
+						  // We will have to come back later and patch it!
+						  byte[] br = new byte[8];
+						  br[0] = (byte) ((riff_header.ckID >>> 24) & 0x000000FF);
+						  br[1] = (byte) ((riff_header.ckID >>> 16) & 0x000000FF);
+						  br[2] = (byte) ((riff_header.ckID >>> 8) & 0x000000FF);
+						  br[3] = (byte) (riff_header.ckID & 0x000000FF);
+
+						  byte br4 = (byte) ((riff_header.ckSize >>> 24) & 0x000000FF);
+						  byte br5 = (byte) ((riff_header.ckSize >>> 16) & 0x000000FF);
+						  byte br6 = (byte) ((riff_header.ckSize >>> 8) & 0x000000FF);
+						  byte br7 = (byte) (riff_header.ckSize & 0x000000FF);
+
+						  br[4] = br7;
+						  br[5] = br6;
+						  br[6] = br5;
+						  br[7] = br4;
+
+						  file.write(br, 0, 8);
+						  fmode = RFM_WRITE;
+					  } catch (java.io.IOException ioe) {
+						  file.close();
+						  fmode = RFM_UNKNOWN;
+					  }
+				  } catch (java.io.IOException ioe) {
+					  fmode = RFM_UNKNOWN;
+					  retcode = DDC_FILE_ERROR;
+				  }
 			  }
-   			  break;
-   
-   		 case RFM_READ:
-			try
-			{	
-				file = new RandomAccessFile(Filename,"r");
-			    try
-				{
-   				   // Try to read the RIFF header...   				   
-				   byte[] br = new byte[8];
-				   file.read(br,0,8);
-				   fmode = RFM_READ;
-				   riff_header.ckID = ((br[0]<<24)& 0xFF000000) | ((br[1]<<16)&0x00FF0000) | ((br[2]<<8)&0x0000FF00) | (br[3]&0x000000FF);
-				   riff_header.ckSize = ((br[4]<<24)& 0xFF000000) | ((br[5]<<16)&0x00FF0000) | ((br[6]<<8)&0x0000FF00) | (br[7]&0x000000FF);
-				} catch (IOException ioe)
-				  {
-				    file.close();
-				  	fmode = RFM_UNKNOWN;
-		 		  }
-			} catch (IOException ioe)
-			  {
-			 	 fmode = RFM_UNKNOWN;
-   				 retcode = DDC_FILE_ERROR;
+			  case RFM_READ -> {
+				  try {
+					  file = new java.io.RandomAccessFile(Filename, "r");
+					  try {
+						  // Try to read the RIFF header...
+						  byte[] br = new byte[8];
+						  file.read(br, 0, 8);
+						  fmode = RFM_READ;
+						  riff_header.ckID = ((br[0] << 24) & 0xFF000000) | ((br[1] << 16) & 0x00FF0000) | ((br[2] << 8) & 0x0000FF00) | (br[3] & 0x000000FF);
+						  riff_header.ckSize = ((br[4] << 24) & 0xFF000000) | ((br[5] << 16) & 0x00FF0000) | ((br[6] << 8) & 0x0000FF00) | (br[7] & 0x000000FF);
+					  } catch (java.io.IOException ioe) {
+						  file.close();
+						  fmode = RFM_UNKNOWN;
+					  }
+				  } catch (java.io.IOException ioe) {
+					  fmode = RFM_UNKNOWN;
+					  retcode = DDC_FILE_ERROR;
+				  }
 			  }
-   			  break;
-   		 default:
-   			  retcode = DDC_INVALID_CALL;
-   	  	}
+			  default -> retcode = DDC_INVALID_CALL;
+		  }
       }
    	 return retcode;
    }
@@ -348,47 +337,39 @@ public class RiffFile
    public int Close()
    {
      int retcode = DDC_SUCCESS;
-   
-      switch ( fmode )
-      {
-   	  	case RFM_WRITE:
-	  	  try
-		  {
-			file.seek(0);
-	  	    try
-			{
-				byte[] br = new byte[8];
-				br[0] = (byte) ((riff_header.ckID >>> 24) & 0x000000FF);
-				br[1] = (byte) ((riff_header.ckID >>> 16) & 0x000000FF);
-				br[2] = (byte) ((riff_header.ckID >>> 8) & 0x000000FF);
-				br[3] = (byte) (riff_header.ckID & 0x000000FF);
-			    
-				br[7] = (byte) ((riff_header.ckSize >>> 24)& 0x000000FF);
-				br[6] = (byte) ((riff_header.ckSize >>> 16)& 0x000000FF);
-				br[5] = (byte) ((riff_header.ckSize >>> 8)& 0x000000FF);
-				br[4] = (byte) (riff_header.ckSize & 0x000000FF);
-				file.write(br,0,8);	
-				file.close();
-			} catch (IOException ioe)
-			    {
+
+	   switch (fmode) {
+		   case RFM_WRITE -> {
+			   try {
+				   file.seek(0);
+				   try {
+					   byte[] br = new byte[8];
+					   br[0] = (byte) ((riff_header.ckID >>> 24) & 0x000000FF);
+					   br[1] = (byte) ((riff_header.ckID >>> 16) & 0x000000FF);
+					   br[2] = (byte) ((riff_header.ckID >>> 8) & 0x000000FF);
+					   br[3] = (byte) (riff_header.ckID & 0x000000FF);
+
+					   br[7] = (byte) ((riff_header.ckSize >>> 24) & 0x000000FF);
+					   br[6] = (byte) ((riff_header.ckSize >>> 16) & 0x000000FF);
+					   br[5] = (byte) ((riff_header.ckSize >>> 8) & 0x000000FF);
+					   br[4] = (byte) (riff_header.ckSize & 0x000000FF);
+					   file.write(br, 0, 8);
+					   file.close();
+				   } catch (java.io.IOException ioe) {
+					   retcode = DDC_FILE_ERROR;
+				   }
+			   } catch (java.io.IOException ioe) {
 				   retcode = DDC_FILE_ERROR;
-				}
-		  } catch (IOException ioe)
-		    {
-			   retcode = DDC_FILE_ERROR;
-			}
-   		   break;
-   
-   	  	case RFM_READ:
-   	  	   try
-		   {
-   		        file.close();
-   		   } catch (IOException ioe)
-		    {
-			   retcode = DDC_FILE_ERROR;
-			}
-   		   break;
-      }
+			   }
+		   }
+		   case RFM_READ -> {
+			   try {
+				   file.close();
+			   } catch (java.io.IOException ioe) {
+				   retcode = DDC_FILE_ERROR;
+			   }
+		   }
+	   }
       file = null;   
       fmode = RFM_UNKNOWN;
    	  return retcode;
@@ -468,17 +449,16 @@ public class RiffFile
 	*/
    private String DDCRET_String(int retcode)
    {
-   	 switch ( retcode )
-   	 {
-	  case DDC_SUCCESS:          return "DDC_SUCCESS";
-	  case DDC_FAILURE:          return "DDC_FAILURE";
-	  case DDC_OUT_OF_MEMORY:    return "DDC_OUT_OF_MEMORY";
-	  case DDC_FILE_ERROR:       return "DDC_FILE_ERROR";
-	  case DDC_INVALID_CALL:     return "DDC_INVALID_CALL";
-	  case DDC_USER_ABORT:       return "DDC_USER_ABORT";
-	  case DDC_INVALID_FILE:     return "DDC_INVALID_FILE";
-     }
-     return "Unknown Error";   
+	   return switch (retcode) {
+		   case DDC_SUCCESS -> "DDC_SUCCESS";
+		   case DDC_FAILURE -> "DDC_FAILURE";
+		   case DDC_OUT_OF_MEMORY -> "DDC_OUT_OF_MEMORY";
+		   case DDC_FILE_ERROR -> "DDC_FILE_ERROR";
+		   case DDC_INVALID_CALL -> "DDC_INVALID_CALL";
+		   case DDC_USER_ABORT -> "DDC_USER_ABORT";
+		   case DDC_INVALID_FILE -> "DDC_INVALID_FILE";
+		   default -> "Unknown Error";
+	   };
    }
 
    /**
@@ -487,9 +467,8 @@ public class RiffFile
    public static int FourCC(String ChunkName)
    {
       byte[] p = {0x20,0x20,0x20,0x20};
-	  ChunkName.getBytes(0,4,p,0);
-	  int ret = (((p[0] << 24)& 0xFF000000) | ((p[1] << 16)&0x00FF0000) | ((p[2] << 8)&0x0000FF00) | (p[3]&0x000000FF));
-      return ret;
+	  ChunkName.getBytes(0, 4, p, 0);
+	   return (((p[0] << 24)& 0xFF000000) | ((p[1] << 16)&0x00FF0000) | ((p[2] << 8)&0x0000FF00) | (p[3]&0x000000FF));
    }
 
 }

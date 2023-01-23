@@ -72,8 +72,7 @@ public class JavaSoundAudioDevice extends AudioDeviceBase
 	{
 		AudioFormat fmt = getAudioFormat();
 		//DataLine.Info info = new DataLine.Info(SourceDataLine.class, fmt, 4000);
-		DataLine.Info info = new DataLine.Info(SourceDataLine.class, fmt);
-		return info;
+		return new javax.sound.sampled.DataLine.Info(javax.sound.sampled.SourceDataLine.class, fmt);
 	}
 
 	public void open(AudioFormat fmt) throws JavaLayerException
@@ -86,9 +85,7 @@ public class JavaSoundAudioDevice extends AudioDeviceBase
 		}
 	}
 
-	protected void openImpl()
-		throws JavaLayerException
-	{
+	protected void openImpl() {
 	}
 
 
@@ -104,33 +101,18 @@ public class JavaSoundAudioDevice extends AudioDeviceBase
          		source = (SourceDataLine)line;
                 //source.open(fmt, millisecondsToBytes(fmt, 2000));
 				source.open(fmt);
-                /*
-                if (source.isControlSupported(FloatControl.Type.MASTER_GAIN))
-                {
-					FloatControl c = (FloatControl)source.getControl(FloatControl.Type.MASTER_GAIN);
-                    c.setValue(c.getMaximum());
-                }*/
-                source.start();
+				source.start();
 
             }
-        } catch (RuntimeException ex)
+        } catch (RuntimeException | javax.sound.sampled.LineUnavailableException | LinkageError ex)
           {
 			  t = ex;
-          }
-          catch (LinkageError ex)
-          {
-              t = ex;
-          }
-          catch (LineUnavailableException ex)
-          {
-              t = ex;
           }
 		if (source==null) throw new JavaLayerException("cannot obtain source audio line", t);
     }
 
     protected Line createLine() throws LineUnavailableException {
-        Line line = AudioSystem.getLine(getSourceLineInfo());
-        return line;
+		return javax.sound.sampled.AudioSystem.getLine(getSourceLineInfo());
     }
 
 	public int millisecondsToBytes(AudioFormat fmt, int time)

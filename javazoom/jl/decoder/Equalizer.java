@@ -56,25 +56,37 @@ public final class Equalizer
 	{		
 	}
 	
-//	private Equalizer(float b1, float b2, float b3, float b4, float b5,
-//					 float b6, float b7, float b8, float b9, float b10, float b11,
-//					 float b12, float b13, float b14, float b15, float b16,
-//					 float b17, float b18, float b19, float b20);
+	private Equalizer(float b1, float b2, float b3, float b4, float b5,
+					 float b6, float b7, float b8, float b9, float b10, float b11,
+					 float b12, float b13, float b14, float b15, float b16,
+					 float b17, float b18, float b19, float b20);
 
+	/**
+	 *
+	 * @param settings
+	 */
 	public Equalizer(float[] settings)
 	{
 		setFrom(settings);
 	}
-	
+
+	/**
+	 *
+	 * @param eq
+	 */
 	public Equalizer(EQFunction eq)
 	{
 		setFrom(eq);
 	}
-	
+
+	/**
+	 *
+	 * @param eq
+	 */
 	public void setFrom(float[] eq)
 	{
 		reset();
-		int max = (eq.length > BANDS) ? BANDS : eq.length;
+		int max = Math.min(eq.length, BANDS);
 		
 		for (int i=0; i<max; i++)
 		{
@@ -82,6 +94,10 @@ public final class Equalizer
 		}
 	}
 
+	/**
+	 *
+	 * @param eq
+	 */
 	public void setFrom(EQFunction eq)
 	{
 		reset();
@@ -127,7 +143,13 @@ public final class Equalizer
 	{
 		return settings.length;	
 	}
-	
+
+	/**
+	 *
+	 * @param band
+	 * @param neweq
+	 * @return
+	 */
 	public float setBand(int band, float neweq)
 	{
 		float eq = 0.0f;
@@ -157,7 +179,12 @@ public final class Equalizer
 		
 		return eq;
 	}
-	
+
+	/**
+	 *
+	 * @param eq
+	 * @return
+	 */
 	private float limit(float eq)
 	{
 		if (eq==BAND_NOT_PRESENT)

@@ -1,9 +1,9 @@
 /* 
  * 11/19/04	 1.0 moved to LGPL.
  * 
- * 12/12/99  Initial Version based on FileObuffer.	mdm@techie.com.
+ * 12/12/99  Initial Version based on FileBuffer.	mdm@techie.com.
  * 
- * FileObuffer:
+ * FileBuffer:
  * 15/02/99  Java Conversion by E.B ,javalayer@javazoom.net
  *
  *-----------------------------------------------------------------------
@@ -31,10 +31,10 @@ package javazoom.jl.decoder;
  */
 public class SampleBuffer extends Obuffer
 {
-  private short[] 		buffer;
-  private int[] 		bufferp;
-  private int 			channels;
-  private int			frequency;
+  private final short[] 		buffer;
+  private final int[] 		bufferp;
+  private final int 			channels;
+  private final int			frequency;
   
   /**
    * Constructor
@@ -90,7 +90,7 @@ public class SampleBuffer extends Obuffer
 	    {
 		  	fs = f[i++];
 			fs = (fs>32767.0f ? 32767.0f 
-						   : (fs < -32767.0f ? -32767.0f : fs));
+						   : (Math.max(fs, -32767.0f)));
 			
 			s = (short)fs;
 			buffer[pos] = s;
@@ -102,13 +102,10 @@ public class SampleBuffer extends Obuffer
   
   
   /**
-   * Write the samples to the file (Random Acces).
+   * Write the samples to the file (Random Access).
    */
   public void write_buffer(int val)
   {
-				  
-	//for (int i = 0; i < channels; ++i) 
-	//	bufferp[i] = (short)i;
 
   }
 

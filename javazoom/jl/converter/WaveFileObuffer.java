@@ -28,7 +28,7 @@ package javazoom.jl.converter;
 import javazoom.jl.decoder.Obuffer;
 
 /**
- * Implements an Obuffer by writing the data to
+ * Implements an Buffer by writing the data to
  * a file in RIFF WAVE format. 
  *  
  * @since 0.0
@@ -37,10 +37,10 @@ import javazoom.jl.decoder.Obuffer;
 
 public class WaveFileObuffer extends Obuffer
 {
-  private short[] 		buffer;
-  private short[] 		bufferp;
-  private int 			channels;
-  private WaveFile      outWave;
+  private final short[] 		buffer;
+  private final short[] 		bufferp;
+  private final int 			channels;
+  private final javazoom.jl.converter.WaveFile outWave;
 
   /**
    * Creates a new WareFileObuffer instance. 
@@ -51,7 +51,7 @@ public class WaveFileObuffer extends Obuffer
    * 
    * @param freq	The sample frequency of the samples in the buffer.
    * 
-   * @param fileName	The filename to write the data to.
+   * @param FileName	The filename to write the data to.
    */
   public WaveFileObuffer(int number_of_channels, int freq, String FileName)
   {
@@ -91,18 +91,7 @@ public class WaveFileObuffer extends Obuffer
     
 	rc = outWave.WriteData(buffer, bufferp[0]);
 	// REVIEW: handle RiffFile errors. 
-	/*
-    for (int j=0;j<bufferp[0];j=j+2)
-    {
-        
-        //myBuffer[0] = (short)(((buffer[j]>>8)&0x000000FF) | ((buffer[j]<<8)&0x0000FF00));
-        //myBuffer[1] = (short) (((buffer[j+1]>>8)&0x000000FF) | ((buffer[j+1]<<8)&0x0000FF00));
-        myBuffer[0] = buffer[j];
-        myBuffer[1] = buffer[j+1];
-        rc = outWave.WriteData (myBuffer,2);
-    }
-	*/
-    for (int i = 0; i < channels; ++i) bufferp[i] = (short)i;
+      for (int i = 0; i < channels; ++i) bufferp[i] = (short)i;
   }
 
   public void close()

@@ -1,7 +1,7 @@
 /*
  * 11/19/04  1.0 moved to LGPL.
  * 
- * 11/17/04	 Uncomplete frames discarded. E.B, javalayer@javazoom.net 
+ * 11/17/04	 Uncompleted frames discarded. E.B, javalayer@javazoom.net
  *
  * 12/05/03	 ID3v2 tag returned. E.B, javalayer@javazoom.net 
  *
@@ -43,7 +43,7 @@ import java.io.PushbackInputStream;
 
 
 /**
- * The <code>Bistream</code> class is responsible for parsing
+ * The <code>Bitstream</code> class is responsible for parsing
  * an MPEG audio bitstream.
  *
  * <b>REVIEW:</b> much of the parsing currently occurs in the
@@ -83,7 +83,7 @@ public final class Bitstream implements BitstreamErrors
 	/**
 	 * The bytes read from the stream.
 	 */
-	private byte[]			frame_bytes = new byte[BUFFER_INT_SIZE*4];
+	private final byte[]			frame_bytes = new byte[BUFFER_INT_SIZE*4];
 
 	/**
 	 * Index into <code>framebuffer</code> where the next bits are
@@ -110,10 +110,8 @@ public final class Bitstream implements BitstreamErrors
 	 *
 	 */
 	private boolean			single_ch_mode;
-  //private int 			current_frame_number;
-  //private int				last_frame_number;
 
-	private final int		bitmask[] = {0,	// dummy
+	private final int[] bitmask = {0,	// dummy
 	 0x00000001, 0x00000003, 0x00000007, 0x0000000F,
 	 0x0000001F, 0x0000003F, 0x0000007F, 0x000000FF,
 	 0x000001FF, 0x000003FF, 0x000007FF, 0x00000FFF,
@@ -124,9 +122,9 @@ public final class Bitstream implements BitstreamErrors
 
 	private final Header			header = new Header();
 
-	private final byte				syncbuf[] = new byte[4];
+	private final byte[] syncbuf = new byte[4];
 
-	private Crc16[]					crc = new Crc16[1];
+	private final Crc16[]					crc = new Crc16[1];
 
 	private byte[]					rawid3v2 = null;
 
@@ -149,8 +147,6 @@ public final class Bitstream implements BitstreamErrors
 		source = new PushbackInputStream(in, BUFFER_INT_SIZE*4);
 		
 		closeFrame();
-		//current_frame_number = -1;
-		//last_frame_number = -1;
 	}
 
 	/**
@@ -177,7 +173,7 @@ public final class Bitstream implements BitstreamErrors
 			size = readID3v2Header(in);
 			header_pos = size;			
 		}
-		catch (IOException e)
+		catch (IOException ignored)
 		{}
 		finally
 		{
@@ -186,7 +182,7 @@ public final class Bitstream implements BitstreamErrors
 				// Unread ID3v2 header (10 bytes).
 				in.reset();
 			}
-			catch (IOException e)
+			catch (IOException ignored)
 			{}
 		}
 		// Load ID3v2 tags.
@@ -198,7 +194,7 @@ public final class Bitstream implements BitstreamErrors
 				in.read(rawid3v2,0,rawid3v2.length);
 			}			
 		}
-		catch (IOException e)
+		catch (IOException ignored)
 		{}
 	}
 	
@@ -221,7 +217,7 @@ public final class Bitstream implements BitstreamErrors
 			int majorVersion = id3header[0];
 			int revision = id3header[1];
 			in.read(id3header,0,4);
-			size = (int) (id3header[0] << 21) + (id3header[1] << 14) + (id3header[2] << 7) + (id3header[3]);
+			size = (id3header[0] << 21) + (id3header[1] << 14) + (id3header[2] << 7) + (id3header[3]);
 		}
 		return (size+10);
 	}
@@ -235,8 +231,7 @@ public final class Bitstream implements BitstreamErrors
 		if (rawid3v2 == null) return null;
 		else
 		{
-			ByteArrayInputStream bain = new ByteArrayInputStream(rawid3v2);		
-			return bain;
+			return new java.io.ByteArrayInputStream(rawid3v2);
 		}
 	}
 
@@ -268,7 +263,7 @@ public final class Bitstream implements BitstreamErrors
 		{
 			result = readNextFrame();
 			// E.B, Parse VBR (if any) first frame.
-			if (firstframe == true)
+			if (firstframe)
 			{
 				result.parseVBR(frame_bytes);
 				firstframe = false;
@@ -329,7 +324,7 @@ public final class Bitstream implements BitstreamErrors
 	}
 
 	/**
-	 * Unreads the bytes read from the frame.
+	 * Unreads  the bytes read from the frame.
 	 * @throws BitstreamException
 	 */
 	// REVIEW: add new error codes for this.
@@ -371,20 +366,15 @@ public final class Bitstream implements BitstreamErrors
 		{
 			source.unread(syncbuf, 0, read);
 		}
-		catch (IOException ex)
+		catch (IOException ignored)
 		{
 		}
 
-		boolean sync = false;
-		switch (read)
-		{
-			case 0:
-				sync = true;
-				break;
-			case 4:
-				sync = isSyncMark(headerstring, syncmode, syncword);
-				break;
-		}
+		boolean sync = switch (read) {
+			case 0 -> true;
+			case 4 -> isSyncMark(headerstring, syncmode, syncword);
+			default -> false;
+		};
 
 		return sync;
 	}
@@ -404,19 +394,19 @@ public final class Bitstream implements BitstreamErrors
 		return get_bits(n);
 	}
 
-	protected BitstreamException newBitstreamException(int errorcode)
+	BitstreamException newBitstreamException(int errorcode)
 	{
 		return new BitstreamException(errorcode, null);
 	}
-	protected BitstreamException newBitstreamException(int errorcode, Throwable throwable)
+	private BitstreamException newBitstreamException(int errorcode, Throwable throwable)
 	{
 		return new BitstreamException(errorcode, throwable);
 	}
 
   /**
    * Get next 32 bits from bitstream.
-   * They are stored in the headerstring.
-   * syncmod allows Synchro flag ID
+   * They are stored in the header-string.
+   * syncmode allows Synchro flag ID
    * The returned value is False at the end of stream.
    */
 
@@ -443,9 +433,6 @@ public final class Bitstream implements BitstreamErrors
 			sync = isSyncMark(headerstring, syncmode, syncword);
 		}
 		while (!sync);
-
-		//current_frame_number++;
-		//if (last_frame_number < current_frame_number) last_frame_number = current_frame_number;
 
 		return headerstring;
 	}
@@ -495,24 +482,15 @@ public final class Bitstream implements BitstreamErrors
   /**
    * Parses the data previously read with read_frame_data().
    */
-  void parse_frame() throws BitstreamException
-  {
+  void parse_frame() {
 	// Convert Bytes read to int
 	int	b=0;
 	byte[] byteread = frame_bytes;
 	int bytesize = framesize;
 
 	// Check ID3v1 TAG (True only if last frame).
-	//for (int t=0;t<(byteread.length)-2;t++)
-	//{
-	//	if ((byteread[t]=='T') && (byteread[t+1]=='A') && (byteread[t+2]=='G'))
-	//	{
-	//		System.out.println("ID3v1 detected at offset "+t);
-	//		throw newBitstreamException(INVALIDFRAME, null);
-	//	} 	
-	//}
-	
-	for (int k=0;k<bytesize;k=k+4)
+
+	  for (int k=0;k<bytesize;k=k+4)
 	{
 		int convert = 0;
 		byte b0 = 0;
@@ -532,7 +510,6 @@ public final class Bitstream implements BitstreamErrors
   /**
    * Read bits from buffer into the lower bits of an unsigned int.
    * The LSB contains the latest read bit of the stream.
-   * (1 <= number_of_bits <= 16)
    */
   public int get_bits(int number_of_bits)
   {
@@ -625,7 +602,7 @@ public final class Bitstream implements BitstreamErrors
 	}
 
 	/**
-	 * Simlar to readFully, but doesn't throw exception when
+	 * Similar to readFully, but doesn't throw exception when
 	 * EOF is reached.
 	 */
 	private int readBytes(byte[] b, int offs, int len)

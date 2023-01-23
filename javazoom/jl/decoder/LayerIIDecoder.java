@@ -70,13 +70,13 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
 	
 
 	 /**
-	  * Class for layer II subbands in single channel mode.
+	  * Class for layer II sub-bands in single channel mode.
 	  */
 	static class SubbandLayer2 extends Subband
 	{
-	  // this table contains 3 requantized samples for each legal codeword
-	  // when grouped in 5 bits, i.e. 3 quantizationsteps per sample
-	public static final float grouping_5bits[] = new float[]
+	  // this table contains 3 quantized samples for each legal codeword
+	  // when grouped in 5 bits, i.e. 3 quantization-steps per sample
+	public static final float[] grouping_5bits = new float[]
 	{
 	  -2.0f/3.0f, -2.0f/3.0f, -2.0f/3.0f,
 			 0.0f, -2.0f/3.0f, -2.0f/3.0f,
@@ -107,9 +107,9 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
 	   2.0f/3.0f,  2.0f/3.0f,  2.0f/3.0f
 	};
 
-	// this table contains 3 requantized samples for each legal codeword
-	// when grouped in 7 bits, i.e. 5 quantizationsteps per sample
-	public static final float grouping_7bits[] = new float[]
+	// this table contains 3 quantized samples for each legal codeword
+	// when grouped in 7 bits, i.e. 5 quantization-steps per sample
+	public static final float[] grouping_7bits = new float[]
 	{
 	  -0.8f, -0.8f, -0.8f,   -0.4f, -0.8f, -0.8f,    0.0f, -0.8f, -0.8f,    0.4f, -0.8f, -0.8f,    0.8f, -0.8f, -0.8f,
 	  -0.8f, -0.4f, -0.8f,   -0.4f, -0.4f, -0.8f,    0.0f, -0.4f, -0.8f,    0.4f, -0.4f, -0.8f,    0.8f, -0.4f, -0.8f,
@@ -138,9 +138,9 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
 	  -0.8f,  0.8f,  0.8f,   -0.4f,  0.8f,  0.8f,    0.0f,  0.8f,  0.8f,    0.4f,  0.8f,  0.8f,    0.8f,  0.8f,  0.8f
 	};
 
-	// this table contains 3 requantized samples for each legal codeword
-	// when grouped in 10 bits, i.e. 9 quantizationsteps per sample
-	public static final float grouping_10bits[] =
+	// this table contains 3 quantized samples for each legal codeword
+	// when grouped in 10 bits, i.e. 9 quantization-steps per sample
+	public static final float[] grouping_10bits =
 	{
 	  -8.0f/9.0f, -8.0f/9.0f, -8.0f/9.0f,   -6.0f/9.0f, -8.0f/9.0f, -8.0f/9.0f,   -4.0f/9.0f, -8.0f/9.0f, -8.0f/9.0f,
 	  -2.0f/9.0f, -8.0f/9.0f, -8.0f/9.0f,        0.0f, -8.0f/9.0f, -8.0f/9.0f,    2.0f/9.0f, -8.0f/9.0f, -8.0f/9.0f,
@@ -389,89 +389,89 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
 
 	// data taken from ISO/IEC DIS 11172, Annexes 3-B.2[abcd] and 3-B.4:
 
-	// subbands 0-2 in tables 3-B.2a and 2b: (index is allocation)
-	public static final int table_ab1_codelength[] =
+	// sub-bands 0-2 in tables 3-B.2a and 2b: (index is allocation)
+	public static final int[] table_ab1_codelength =
 	  // bits per codeword
 	{ 0, 5, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
 
-	public static final float table_ab1_groupingtables[][] =
+	public static final float[][] table_ab1_groupingtables =
 	  // pointer to sample grouping table, or NULL-pointer if ungrouped
 	{ null, grouping_5bits, null, null, null, null, null, null, null, null, null, null, null, null, null, null };
 
-	public static final float table_ab1_factor[] =
-	  // factor for requantization: (real)sample * factor - 1.0 gives requantized sample
+	public static final float[] table_ab1_factor =
+	  // factor for quantization: (real)sample * factor - 1.0 gives quantized sample
 	{ 0.0f, 1.0f/2.0f, 1.0f/4.0f, 1.0f/8.0f, 1.0f/16.0f, 1.0f/32.0f, 1.0f/64.0f,
 	  1.0f/128.0f, 1.0f/256.0f, 1.0f/512.0f, 1.0f/1024.0f, 1.0f/2048.0f,
 	  1.0f/4096.0f, 1.0f/8192.0f, 1.0f/16384.0f, 1.0f/32768.0f };
 
-	public static final float table_ab1_c[] =
-	  // factor c for requantization from table 3-B.4
+	public static final float[] table_ab1_c =
+	  // factor c for quantization from table 3-B.4
 	{ 0.0f,           1.33333333333f, 1.14285714286f, 1.06666666666f, 1.03225806452f,
 	  1.01587301587f, 1.00787401575f, 1.00392156863f, 1.00195694716f, 1.00097751711f,
 	  1.00048851979f, 1.00024420024f, 1.00012208522f, 1.00006103888f, 1.00003051851f,
 	  1.00001525902f };
 
-	public static final float table_ab1_d[] =
-	  // addend d for requantization from table 3-B.4
+	public static final float[] table_ab1_d =
+	  // addend d for quantization from table 3-B.4
 	{ 0.0f,           0.50000000000f, 0.25000000000f, 0.12500000000f, 0.06250000000f,
 	  0.03125000000f, 0.01562500000f, 0.00781250000f, 0.00390625000f, 0.00195312500f,
 	  0.00097656250f, 0.00048828125f, 0.00024414063f, 0.00012207031f, 0.00006103516f,
 	  0.00003051758f };
 
-	// subbands 3-... tables 3-B.2a and 2b:
-	public static final float[] table_ab234_groupingtables[] =
+	// sub-bands 3-... tables 3-B.2a and 2b:
+	public static final float[][] table_ab234_groupingtables =
 	{ null, grouping_5bits, grouping_7bits, null, grouping_10bits, null, null, null, null, null, null, null, null, null, null, null };
 
-	// subbands 3-10 in tables 3-B.2a and 2b:
-	public static final int table_ab2_codelength[] =
+	// sub-bands 3-10 in tables 3-B.2a and 2b:
+	public static final int[] table_ab2_codelength =
 	{ 0, 5, 7, 3, 10, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16 };
-	public static final float table_ab2_factor[] =
+	public static final float[] table_ab2_factor =
 	{ 0.0f, 1.0f/2.0f, 1.0f/4.0f, 1.0f/4.0f, 1.0f/8.0f, 1.0f/8.0f, 1.0f/16.0f,
 	  1.0f/32.0f, 1.0f/64.0f, 1.0f/128.0f, 1.0f/256.0f, 1.0f/512.0f,
 	  1.0f/1024.0f, 1.0f/2048.0f, 1.0f/4096.0f, 1.0f/32768.0f };
-	public static final float table_ab2_c[] =
+	public static final float[] table_ab2_c =
 	{ 0.0f,           1.33333333333f, 1.60000000000f, 1.14285714286f, 1.77777777777f,
 	  1.06666666666f, 1.03225806452f, 1.01587301587f, 1.00787401575f, 1.00392156863f,
 	  1.00195694716f, 1.00097751711f, 1.00048851979f, 1.00024420024f, 1.00012208522f,
 	  1.00001525902f };
-	public static final float table_ab2_d[] =
+	public static final float[] table_ab2_d =
 	{ 0.0f,           0.50000000000f, 0.50000000000f, 0.25000000000f, 0.50000000000f,
 	  0.12500000000f, 0.06250000000f, 0.03125000000f, 0.01562500000f, 0.00781250000f,
 	  0.00390625000f, 0.00195312500f, 0.00097656250f, 0.00048828125f, 0.00024414063f,
 	  0.00003051758f };
 
-	// subbands 11-22 in tables 3-B.2a and 2b:
-	public static final int table_ab3_codelength[] = { 0, 5, 7, 3, 10, 4, 5, 16 };
-	public static final float table_ab3_factor[] =
+	// sub-bands 11-22 in tables 3-B.2a and 2b:
+	public static final int[] table_ab3_codelength = { 0, 5, 7, 3, 10, 4, 5, 16 };
+	public static final float[] table_ab3_factor =
 	{ 0.0f, 1.0f/2.0f, 1.0f/4.0f, 1.0f/4.0f, 1.0f/8.0f, 1.0f/8.0f, 1.0f/16.0f, 1.0f/32768.0f };
-	public static final float table_ab3_c[] =
+	public static final float[] table_ab3_c =
 	{ 0.0f,           1.33333333333f, 1.60000000000f, 1.14285714286f, 1.77777777777f,
 	  1.06666666666f, 1.03225806452f, 1.00001525902f };
-	public static final float table_ab3_d[] =
+	public static final float[] table_ab3_d =
 	{ 0.0f,           0.50000000000f, 0.50000000000f, 0.25000000000f, 0.50000000000f,
 	  0.12500000000f, 0.06250000000f, 0.00003051758f };
 
-	// subbands 23-... in tables 3-B.2a and 2b:
-	public static final int table_ab4_codelength[] = { 0, 5, 7, 16 };
-	public static final float table_ab4_factor[] = { 0.0f, 1.0f/2.0f, 1.0f/4.0f, 1.0f/32768.0f };
-	public static final float table_ab4_c[] = { 0.0f, 1.33333333333f, 1.60000000000f, 1.00001525902f };
-	public static final float table_ab4_d[] = { 0.0f, 0.50000000000f, 0.50000000000f, 0.00003051758f };
+	// sub-bands 23-... in tables 3-B.2a and 2b:
+	public static final int[] table_ab4_codelength = { 0, 5, 7, 16 };
+	public static final float[] table_ab4_factor = { 0.0f, 1.0f/2.0f, 1.0f/4.0f, 1.0f/32768.0f };
+	public static final float[] table_ab4_c = { 0.0f, 1.33333333333f, 1.60000000000f, 1.00001525902f };
+	public static final float[] table_ab4_d = { 0.0f, 0.50000000000f, 0.50000000000f, 0.00003051758f };
 
-	// subbands in tables 3-B.2c and 2d:
-	public static final int table_cd_codelength[] =
+	// sub-bands in tables 3-B.2c and 2d:
+	public static final int[] table_cd_codelength =
 	{ 0, 5, 7, 10, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-	public static final float table_cd_groupingtables[][] =
+	public static final float[][] table_cd_groupingtables =
 	{ null, grouping_5bits, grouping_7bits, grouping_10bits, null, null, null, null, null, null, null, null, null, null, null, null };
-	public static final float table_cd_factor[] =
+	public static final float[] table_cd_factor =
 	{ 0.0f, 1.0f/2.0f, 1.0f/4.0f, 1.0f/8.0f, 1.0f/8.0f, 1.0f/16.0f, 1.0f/32.0f, 1.0f/64.0f,
 	  1.0f/128.0f, 1.0f/256.0f, 1.0f/512.0f, 1.0f/1024.0f, 1.0f/2048.0f, 1.0f/4096.0f,
 	  1.0f/8192.0f, 1.0f/16384.0f };
-	public static final float table_cd_c[] =
+	public static final float[] table_cd_c =
 	{ 0.0f,           1.33333333333f, 1.60000000000f, 1.77777777777f, 1.06666666666f,
 	  1.03225806452f, 1.01587301587f, 1.00787401575f, 1.00392156863f, 1.00195694716f,
 	  1.00097751711f, 1.00048851979f, 1.00024420024f, 1.00012208522f, 1.00006103888f,
 	  1.00003051851f };
-	public static final float table_cd_d[] =
+	public static final float[] table_cd_d =
 	{ 0.0f,           0.50000000000f, 0.50000000000f, 0.50000000000f, 0.12500000000f,
 	  0.06250000000f, 0.03125000000f, 0.01562500000f, 0.00781250000f, 0.00390625000f,
 	  0.00195312500f, 0.00097656250f, 0.00048828125f, 0.00024414063f, 0.00012207031f,
@@ -484,7 +484,7 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
 	  protected int				scfsi;
 	  protected float			scalefactor1, scalefactor2, scalefactor3;
 	  protected int[] 			codelength = {0}; 
-	  protected float groupingtable[][] = new float[2][]; 
+	  protected float[][] groupingtable = new float[2][];
 	  //protected float[][] 		groupingtable = {{0},{0}} ;
 	  protected float[]			factor = {0.0f};
 	  protected int				groupnumber;
@@ -642,25 +642,22 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
 	  {
 	 	if (allocation != 0)
 	 	{
-	 	   switch (scfsi)
-	       {
-	      	case 0:
-	  	  	 scalefactor1 = scalefactors[stream.get_bits(6)];
-		  	 scalefactor2 = scalefactors[stream.get_bits(6)];
-		  	 scalefactor3 = scalefactors[stream.get_bits(6)];
-		  	 break;
-			case 1:
-		  	 scalefactor1 = scalefactor2 = scalefactors[stream.get_bits(6)];
-		  	 scalefactor3 = scalefactors[stream.get_bits(6)];
-		  	 break;
-	        case 2:
-		  	 scalefactor1 = scalefactor2 = scalefactor3 = scalefactors[stream.get_bits(6)];
-			 break;
-		    case 3:
-		  	 scalefactor1 = scalefactors[stream.get_bits(6)];
-		     scalefactor2 = scalefactor3 = scalefactors[stream.get_bits(6)];
-		     break;
-	    	}
+			switch (scfsi) {
+				case 0 -> {
+					scalefactor1 = scalefactors[stream.get_bits(6)];
+					scalefactor2 = scalefactors[stream.get_bits(6)];
+					scalefactor3 = scalefactors[stream.get_bits(6)];
+				}
+				case 1 -> {
+					scalefactor1 = scalefactor2 = scalefactors[stream.get_bits(6)];
+					scalefactor3 = scalefactors[stream.get_bits(6)];
+				}
+				case 2 -> scalefactor1 = scalefactor2 = scalefactor3 = scalefactors[stream.get_bits(6)];
+				case 3 -> {
+					scalefactor1 = scalefactors[stream.get_bits(6)];
+					scalefactor2 = scalefactor3 = scalefactors[stream.get_bits(6)];
+				}
+			}
 	    	prepare_sample_reading(header, allocation, 0,
 				    factor, codelength, c, d);
 	  }
@@ -675,20 +672,11 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
 		 if (groupingtable[0] != null)
 		 {
 			int samplecode = stream.get_bits(codelength[0]);
-			// create requantized samples:
+			// create quantized samples:
 			samplecode += samplecode << 1;
 			float[] target = samples;
 			float[] source = groupingtable[0];
-		  /*
-		  int tmp = 0;
-			int temp = 0;
-			target[tmp++] = source[samplecode + temp];
-			temp++;
-			target[tmp++] = source[samplecode + temp];
-			temp++;
-			target[tmp] = source[samplecode + temp];
-			*/
-			//Bugfix:
+			 //Bugfix:
 			int tmp = 0;
 			int temp = samplecode;
 			
@@ -710,10 +698,7 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
 		 }
 
 	  	samplenumber = 0;
-		  if (++groupnumber == 12)
-			 return true;
-		  else
-			 return false;
+		  return ++groupnumber == 12;
 	  }
 
 	  /**
@@ -735,16 +720,13 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
 	  		sample *= scalefactor3;
 	  	 filter1.input_sample(sample, subbandnumber);
 	    }
-	  
-	    if (++samplenumber == 3)
-	  	 return true;
-	    else
-		 return false;
+
+		  return ++samplenumber == 3;
 	  }
-	};
-	
-	 /**
-	  * Class for layer II subbands in joint stereo mode.
+	}
+
+	/**
+	  * Class for layer II sub-bands in joint stereo mode.
 	  */
 	static class SubbandLayer2IntensityStereo extends SubbandLayer2
 	{
@@ -792,29 +774,23 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
 	    if (allocation != 0)
 	    {
 	  	 super.read_scalefactor(stream, header);
-	  	 switch (channel2_scfsi)
-	  	 {
-	  		case 0:
-	  		channel2_scalefactor1 = scalefactors[stream.get_bits(6)];
-	  		channel2_scalefactor2 = scalefactors[stream.get_bits(6)];
-	  		channel2_scalefactor3 = scalefactors[stream.get_bits(6)];
-	  		break;
-	  
-	  		case 1:
-	  		channel2_scalefactor1 = channel2_scalefactor2 = scalefactors[stream.get_bits (6)];
-	  		channel2_scalefactor3 = scalefactors[stream.get_bits(6)];
-	  		break;
-	  
-	  		case 2:
-	  		channel2_scalefactor1 = channel2_scalefactor2 =
-	  		channel2_scalefactor3 = scalefactors[stream.get_bits(6)];
-	  		break;
-	  
-	  		case 3:
-	  		channel2_scalefactor1 = scalefactors[stream.get_bits(6)];
-	  		channel2_scalefactor2 = channel2_scalefactor3 = scalefactors[stream.get_bits (6)];
-	  		break;
-	  	 }
+			switch (channel2_scfsi) {
+				case 0 -> {
+					channel2_scalefactor1 = scalefactors[stream.get_bits(6)];
+					channel2_scalefactor2 = scalefactors[stream.get_bits(6)];
+					channel2_scalefactor3 = scalefactors[stream.get_bits(6)];
+				}
+				case 1 -> {
+					channel2_scalefactor1 = channel2_scalefactor2 = scalefactors[stream.get_bits(6)];
+					channel2_scalefactor3 = scalefactors[stream.get_bits(6)];
+				}
+				case 2 -> channel2_scalefactor1 = channel2_scalefactor2 =
+						channel2_scalefactor3 = scalefactors[stream.get_bits(6)];
+				case 3 -> {
+					channel2_scalefactor1 = scalefactors[stream.get_bits(6)];
+					channel2_scalefactor2 = channel2_scalefactor3 = scalefactors[stream.get_bits(6)];
+				}
+			}
 	    }
 	  
 	  }
@@ -880,16 +856,13 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
 					filter1.input_sample(sample, subbandnumber);
 			 	}
 		  	}
-		
-		  if (++samplenumber == 3)
-			 return true;
-		  else
-		 return false;
-	  }
-	};
 
-	 /**
-	  * Class for layer II subbands in stereo mode.
+		  return ++samplenumber == 3;
+	  }
+	}
+
+	/**
+	  * Class for layer II sub-bands in stereo mode.
 	  */
 	static class SubbandLayer2Stereo extends SubbandLayer2
 	{
@@ -955,31 +928,25 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
 	    super.read_scalefactor(stream, header);
 	    if (channel2_allocation != 0)
 	    {
-	  	 switch (channel2_scfsi)
-	  	 {
-	  		case 0:
-	    	   channel2_scalefactor1 = scalefactors[stream.get_bits(6)];
-	  	  	   channel2_scalefactor2 = scalefactors[stream.get_bits(6)];
-	  	       channel2_scalefactor3 = scalefactors[stream.get_bits(6)];
-	  	       break;
-	  
-	  		case 1:
-	  	   	   channel2_scalefactor1 = channel2_scalefactor2 =
-	        						      scalefactors[stream.get_bits(6)];
-	  	       channel2_scalefactor3 = scalefactors[stream.get_bits(6)];
-	  	       break;
-	  
-	  		case 2:
-	  	   	   channel2_scalefactor1 = channel2_scalefactor2 =
-	  	       channel2_scalefactor3 = scalefactors[stream.get_bits(6)];
-	  	       break;
-	  
-	  		case 3:
-	  	   	   channel2_scalefactor1 = scalefactors[stream.get_bits(6)];
-	  	       channel2_scalefactor2 = channel2_scalefactor3 =
-	        							   scalefactors[stream.get_bits(6)];
-	    	   break;
-	  	 }
+			switch (channel2_scfsi) {
+				case 0 -> {
+					channel2_scalefactor1 = scalefactors[stream.get_bits(6)];
+					channel2_scalefactor2 = scalefactors[stream.get_bits(6)];
+					channel2_scalefactor3 = scalefactors[stream.get_bits(6)];
+				}
+				case 1 -> {
+					channel2_scalefactor1 = channel2_scalefactor2 =
+							scalefactors[stream.get_bits(6)];
+					channel2_scalefactor3 = scalefactors[stream.get_bits(6)];
+				}
+				case 2 -> channel2_scalefactor1 = channel2_scalefactor2 =
+						channel2_scalefactor3 = scalefactors[stream.get_bits(6)];
+				case 3 -> {
+					channel2_scalefactor1 = scalefactors[stream.get_bits(6)];
+					channel2_scalefactor2 = channel2_scalefactor3 =
+							scalefactors[stream.get_bits(6)];
+				}
+			}
 	  	 prepare_sample_reading(header, channel2_allocation, 1,
 	                             channel2_factor, channel2_codelength, channel2_c,
 	                             channel2_d);
@@ -997,21 +964,9 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
 	  	 if (groupingtable[1] != null)
 		 {
 	  		int samplecode = stream.get_bits(channel2_codelength[0]);
-	  		// create requantized samples:
+	  		// create quantized samples:
 	  		samplecode += samplecode << 1;
-	  	/*
-	  		float[] target = channel2_samples;
-	  		float[] source = channel2_groupingtable[0];
-			int tmp = 0;
-			int temp = 0;
-	  		target[tmp++] = source[samplecode + temp];
-			temp++;
-	  		target[tmp++] = source[samplecode + temp];
-			temp++;
-	  		target[tmp] = source[samplecode + temp];
-	  		// memcpy (channel2_samples, channel2_groupingtable + samplecode, 3 * sizeof (real));
-	  	*/
-	  	float[] target = channel2_samples;
+			 float[] target = channel2_samples;
 	    float[] source = groupingtable[1];
 			int tmp = 0;
 			int temp = samplecode;

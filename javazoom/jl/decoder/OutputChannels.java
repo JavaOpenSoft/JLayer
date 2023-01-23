@@ -22,7 +22,7 @@ package javazoom.jl.decoder;
 
 
 /**
- * A Type-safe representation of the the supported output channel
+ * A Type-safe representation of the supported output channel
  * constants. 
  * 
  * This class is immutable and, hence, is thread safe. 
@@ -59,7 +59,7 @@ public class OutputChannels
 	public static final OutputChannels DOWNMIX = new OutputChannels(DOWNMIX_CHANNELS);
 				
 	
-	private /*final*/ int	outputChannels;
+	private final /*final*/ int	outputChannels;
 			
 	/**
 	 * Creates an <code>OutputChannels</code> instance
@@ -72,19 +72,13 @@ public class OutputChannels
 	 */
 	static public OutputChannels fromInt(int code)
 	{
-		switch (code)
-		{
-		case LEFT_CHANNEL:
-			return LEFT;
-		case RIGHT_CHANNEL:
-			return RIGHT;
-		case BOTH_CHANNELS:
-			return BOTH;
-		case DOWNMIX_CHANNELS:
-			return DOWNMIX;
-		default:
-			throw new IllegalArgumentException("Invalid channel code: "+code);
-		}
+		return switch (code) {
+			case LEFT_CHANNEL -> LEFT;
+			case RIGHT_CHANNEL -> RIGHT;
+			case BOTH_CHANNELS -> BOTH;
+			case DOWNMIX_CHANNELS -> DOWNMIX;
+			default -> throw new IllegalArgumentException("Invalid channel code: " + code);
+		};
 	}
 		
 	private OutputChannels(int channels)
@@ -117,8 +111,7 @@ public class OutputChannels
 	 */
 	public int getChannelCount()
 	{
-		int count = (outputChannels==BOTH_CHANNELS) ?  2 : 1;
-		return count;
+		return (outputChannels==BOTH_CHANNELS) ?  2 : 1;
 	}
 		
 		
@@ -126,9 +119,8 @@ public class OutputChannels
 	{
 		boolean equals = false;
 			
-		if (o instanceof OutputChannels)
+		if (o instanceof javazoom.jl.decoder.OutputChannels oc)
 		{
-			OutputChannels oc = (OutputChannels)o;
 			equals = (oc.outputChannels == outputChannels);
 		}
 			

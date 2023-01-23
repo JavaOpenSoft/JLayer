@@ -27,8 +27,7 @@ import java.io.PrintStream;
  * The JavaLayerException is the base class for all API-level
  * exceptions thrown by JavaLayer. To facilitate conversion and 
  * common handling of exceptions from other domains, the class 
- * can delegate some functionality to a contained Throwable instance. 
- * <p> 
+ * can delegate some functionality to a contained Throwable instance.
  * 
  * @author MDM
  */

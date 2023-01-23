@@ -34,38 +34,27 @@ import java.io.IOException;
 
 /**
  * A class for the synthesis filter bank.
- * This class does a fast downsampling from 32, 44.1 or 48 kHz to 8 kHz, if ULAW is defined.
- * Frequencies above 4 kHz are removed by ignoring higher subbands.
+ * This class does a fast down sampling from 32, 44.1 or 48 kHz to 8 kHz, if ULAW is defined.
+ * Frequencies above 4 kHz are removed by ignoring higher sub-bands.
  */
 final class SynthesisFilter
 {
-  private float[] 			 v1;
-  private float[]		 	 v2;
+  private final float[] 			 v1;
+  private final float[]		 	 v2;
   private float[]			 actual_v;			// v1 or v2
   private int 			 	 actual_write_pos;	// 0-15
-  private float[]			 samples;			// 32 new subband samples
-  private int				 channel;
-  private float 			 scalefactor;
+  private final float[]			 samples;			// 32 new subband samples
+  private final int				 channel;
+  private final float 			 scalefactor;
   private float[]			 eq;
 	
 	/**
 	 * Quality value for controlling CPU usage/quality tradeoff. 
 	 */
-	/*
-	private int				quality;
-	
-	private int				v_inc;
-	
-	
-	
-	public static final int	HIGH_QUALITY = 1;
-	public static final int MEDIUM_QUALITY = 2;
-	public static final int LOW_QUALITY = 4;
-	*/
-	
-  /**
-   * Contructor.
-   * The scalefactor scales the calculated float pcm samples to short values
+
+	/**
+   * Contractor.
+   * The scale factor scales the calculated float pcm samples to short values
    * (raw pcm samples are in [-1.0, 1.0], if no violations occur).
    */
   public SynthesisFilter(int channelnumber, float factor, float[] eq0)
@@ -102,30 +91,8 @@ final class SynthesisFilter
 	 }
 	  
   }
-  
-	/*
-	private void setQuality(int quality0)
-	{
-	  	switch (quality0)
-	  	{		
-		case HIGH_QUALITY:
-		case MEDIUM_QUALITY:
-		case LOW_QUALITY:						  
-			v_inc = 16 * quality0;			
-			quality = quality0;
-			break;	
-		default :
-			throw new IllegalArgumentException("Unknown quality value");
-	  	}				
-	}
-	
-	public int getQuality()
-	{
-		return quality;	
-	}
-	*/
-  
-  /**
+
+	/**
    * Reset the synthesis filter.
    */
   public void reset()
@@ -174,22 +141,8 @@ final class SynthesisFilter
 	// p is fully initialized from x1
 	 //float[] p = _p;
 	 // pp is fully initialized from p
-	 //float[] pp = _pp; 
-	  
-	 //float[] new_v = _new_v;
-	  
-  	//float[] new_v = new float[32]; // new V[0-15] and V[33-48] of Figure 3-A.2 in ISO DIS 11172-3
-	//float[] p = new float[16];
-	//float[] pp = new float[16];
-	  
-	 /*
-	 for (int i=31; i>=0; i--)
-	 {
-		 new_v[i] = 0.0f;
-	 }
-	  */
-	  
-	float new_v0, new_v1, new_v2, new_v3, new_v4, new_v5, new_v6, new_v7, new_v8, new_v9;
+
+	  float new_v0, new_v1, new_v2, new_v3, new_v4, new_v5, new_v6, new_v7, new_v8, new_v9;
 	float new_v10, new_v11, new_v12, new_v13, new_v14, new_v15, new_v16, new_v17, new_v18, new_v19;
 	float new_v20, new_v21, new_v22, new_v23, new_v24, new_v25, new_v26, new_v27, new_v28, new_v29;
 	float new_v30, new_v31;
@@ -198,13 +151,9 @@ final class SynthesisFilter
 	new_v10 = new_v11 = new_v12 = new_v13 = new_v14 = new_v15 = new_v16 = new_v17 = new_v18 = new_v19 = 
 	new_v20 = new_v21 = new_v22 = new_v23 = new_v24 = new_v25 = new_v26 = new_v27 = new_v28 = new_v29 = 
 	new_v30 = new_v31 = 0.0f;
-	
-	
-//	float[] new_v = new float[32]; // new V[0-15] and V[33-48] of Figure 3-A.2 in ISO DIS 11172-3
-//	float[] p = new float[16];
-//	float[] pp = new float[16];
 
-    float[] s = samples;
+
+	  float[] s = samples;
 	
 	float s0 = s[0];
 	float s1 = s[1];
@@ -447,11 +396,11 @@ final class SynthesisFilter
 
 	// insert V[0-15] (== new_v[0-15]) into actual v:	
 	// float[] x2 = actual_v + actual_write_pos;
-	float dest[] = actual_v;
+	float[] dest = actual_v;
 	
 	int pos = actual_write_pos;
 	
-	dest[0 + pos] = new_v0;
+	dest[pos] = new_v0;
 	dest[16 + pos] = new_v1;
 	dest[32 + pos] = new_v2;
 	dest[48 + pos] = new_v3;
@@ -491,7 +440,7 @@ final class SynthesisFilter
 	// insert V[32] (== -new_v[0]) into other v:
 	dest = (actual_v==v1) ? v2 : v1;
 	
-	dest[0 + pos] = -new_v0;
+	dest[pos] = -new_v0;
 	// insert V[33-48] (== new_v[16-31]) into other v:
 	dest[16 + pos] = new_v16;
 	dest[32 + pos] = new_v17;
@@ -577,11 +526,8 @@ final class SynthesisFilter
 	// p is fully initialized from x1
 	 //float[] p = _p;
 	 // pp is fully initialized from p
-	 //float[] pp = _pp; 
-	  
-	 //float[] new_v = _new_v;
-	  
-  	float[] new_v = new float[32]; // new V[0-15] and V[33-48] of Figure 3-A.2 in ISO DIS 11172-3
+
+	  float[] new_v = new float[32]; // new V[0-15] and V[33-48] of Figure 3-A.2 in ISO DIS 11172-3
 	float[] p = new float[16];
 	float[] pp = new float[16];
 	  
@@ -590,12 +536,8 @@ final class SynthesisFilter
 	 {
 		 new_v[i] = 0.0f;
 	 }
-	 
-//	float[] new_v = new float[32]; // new V[0-15] and V[33-48] of Figure 3-A.2 in ISO DIS 11172-3
-//	float[] p = new float[16];
-//	float[] pp = new float[16];
 
-    float[] x1 = samples;
+	  float[] x1 = samples;
 	
 	p[0] = x1[0] + x1[31];
 	p[1] = x1[1] + x1[30];
@@ -808,7 +750,7 @@ final class SynthesisFilter
 	// float[] x2 = actual_v + actual_write_pos;
 	float[] dest = actual_v;
 	
-	dest[0 + actual_write_pos] = x1[0];
+	dest[actual_write_pos] = x1[0];
 	dest[16 + actual_write_pos] = x1[1];
 	dest[32 + actual_write_pos] = x1[2];
 	dest[48 + actual_write_pos] = x1[3];
@@ -853,22 +795,21 @@ final class SynthesisFilter
    * Compute PCM Samples.
    */
   
-  private float[] _tmpOut = new float[32];
+  private final float[] _tmpOut = new float[32];
   
   
   private void compute_pcm_samples0(Obuffer buffer)
   {
 	final float[] vp = actual_v;	
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
 			{
 		float pcm_sample;
 		final float[] dp = d16[i];
-		pcm_sample = (float)(((vp[0 + dvp] * dp[0]) +
+		pcm_sample = ((vp[dvp] * dp[0]) +
 			(vp[15 + dvp] * dp[1]) +
 			(vp[14 + dvp] * dp[2]) +
 			(vp[13 + dvp] * dp[3]) +
@@ -884,9 +825,9 @@ final class SynthesisFilter
 			(vp[3 + dvp] * dp[13]) +
 			(vp[2 + dvp] * dp[14]) +
 			(vp[1 + dvp] * dp[15])
-			) * scalefactor);
+			) * scalefactor;
 
-            tmpOut[i] = pcm_sample;
+            _tmpOut[i] = pcm_sample;
 			
 			dvp += 16;
 	} // for
@@ -896,8 +837,7 @@ final class SynthesisFilter
   {
 	final float[] vp = actual_v;	
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
@@ -905,8 +845,8 @@ final class SynthesisFilter
 				final float[] dp = d16[i];
 				float pcm_sample;
 
-				pcm_sample = (float)(((vp[1 + dvp] * dp[0]) +
-					(vp[0 + dvp] * dp[1]) +
+				pcm_sample = ((vp[1 + dvp] * dp[0]) +
+					(vp[dvp] * dp[1]) +
 					(vp[15 + dvp] * dp[2]) +
 					(vp[14 + dvp] * dp[3]) +
 					(vp[13 + dvp] * dp[4]) +
@@ -921,9 +861,9 @@ final class SynthesisFilter
 					(vp[4 + dvp] * dp[13]) +
 					(vp[3 + dvp] * dp[14]) +
 					(vp[2 + dvp] * dp[15])
-					) * scalefactor);
+					) * scalefactor;
 
-            tmpOut[i] = pcm_sample;
+            _tmpOut[i] = pcm_sample;
 			
 			dvp += 16;
          } // for
@@ -933,8 +873,7 @@ final class SynthesisFilter
 	final float[] vp = actual_v;
 	
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
@@ -942,9 +881,9 @@ final class SynthesisFilter
 				final float[] dp = d16[i];
 				float pcm_sample;
 
-				pcm_sample = (float)(((vp[2 + dvp] * dp[0]) +
+				pcm_sample = ((vp[2 + dvp] * dp[0]) +
 					(vp[1 + dvp] * dp[1]) +
-					(vp[0 + dvp] * dp[2]) +
+					(vp[dvp] * dp[2]) +
 					(vp[15 + dvp] * dp[3]) +
 					(vp[14 + dvp] * dp[4]) +
 					(vp[13 + dvp] * dp[5]) +
@@ -958,9 +897,9 @@ final class SynthesisFilter
 					(vp[5 + dvp] * dp[13]) +
 					(vp[4 + dvp] * dp[14]) +
 					(vp[3 + dvp] * dp[15])
-					) * scalefactor);
+					) * scalefactor;
 
-            tmpOut[i] = pcm_sample;
+            _tmpOut[i] = pcm_sample;
 			
 			dvp += 16;
 			} // for
@@ -972,8 +911,7 @@ final class SynthesisFilter
 	
 	int idx = 0;
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
@@ -981,10 +919,10 @@ final class SynthesisFilter
 				final float[] dp = d16[i];
 				float pcm_sample;
 
-				pcm_sample = (float)(((vp[3 + dvp] * dp[0]) +
+				pcm_sample = ((vp[3 + dvp] * dp[0]) +
 					(vp[2 + dvp] * dp[1]) +
 					(vp[1 + dvp] * dp[2]) +
-					(vp[0 + dvp] * dp[3]) +
+					(vp[dvp] * dp[3]) +
 					(vp[15 + dvp] * dp[4]) +
 					(vp[14 + dvp] * dp[5]) +
 					(vp[13 + dvp] * dp[6]) +
@@ -997,9 +935,9 @@ final class SynthesisFilter
 					(vp[6 + dvp] * dp[13]) +
 					(vp[5 + dvp] * dp[14]) +
 					(vp[4 + dvp] * dp[15])
-					) * scalefactor);
+					) * scalefactor;
 
-            tmpOut[i] = pcm_sample;
+            _tmpOut[i] = pcm_sample;
 			
 			dvp += 16;
 			} // for
@@ -1010,8 +948,7 @@ final class SynthesisFilter
 	final float[] vp = actual_v;
 	
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
@@ -1019,11 +956,11 @@ final class SynthesisFilter
 				final float[] dp = d16[i];
 				float pcm_sample;
 
-				pcm_sample = (float)(((vp[4 + dvp] * dp[0]) +
+				pcm_sample = ((vp[4 + dvp] * dp[0]) +
 					(vp[3 + dvp] * dp[1]) +
 					(vp[2 + dvp] * dp[2]) +
 					(vp[1 + dvp] * dp[3]) +
-					(vp[0 + dvp] * dp[4]) +
+					(vp[dvp] * dp[4]) +
 					(vp[15 + dvp] * dp[5]) +
 					(vp[14 + dvp] * dp[6]) +
 					(vp[13 + dvp] * dp[7]) +
@@ -1035,9 +972,9 @@ final class SynthesisFilter
 					(vp[7 + dvp] * dp[13]) +
 					(vp[6 + dvp] * dp[14]) +
 					(vp[5 + dvp] * dp[15])
-					) * scalefactor);
+					) * scalefactor;
 
-            tmpOut[i] = pcm_sample;
+            _tmpOut[i] = pcm_sample;
 			
 			dvp += 16;
 			} // for
@@ -1048,8 +985,7 @@ final class SynthesisFilter
 	final float[] vp = actual_v;
 	
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
@@ -1057,12 +993,12 @@ final class SynthesisFilter
 				final float[] dp = d16[i];
 				float pcm_sample;
 
-				pcm_sample = (float)(((vp[5 + dvp] * dp[0]) +
+				pcm_sample = ((vp[5 + dvp] * dp[0]) +
 					(vp[4 + dvp] * dp[1]) +
 					(vp[3 + dvp] * dp[2]) +
 					(vp[2 + dvp] * dp[3]) +
 					(vp[1 + dvp] * dp[4]) +
-					(vp[0 + dvp] * dp[5]) +
+					(vp[dvp] * dp[5]) +
 					(vp[15 + dvp] * dp[6]) +
 					(vp[14 + dvp] * dp[7]) +
 					(vp[13 + dvp] * dp[8]) +
@@ -1073,9 +1009,9 @@ final class SynthesisFilter
 					(vp[8 + dvp] * dp[13]) +
 					(vp[7 + dvp] * dp[14]) +
 					(vp[6 + dvp] * dp[15])
-					) * scalefactor);
+					) * scalefactor;
 
-            tmpOut[i] = pcm_sample;
+            _tmpOut[i] = pcm_sample;
 			
 			dvp += 16;
 			} // for
@@ -1085,8 +1021,7 @@ final class SynthesisFilter
   {
 	final float[] vp = actual_v;	
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
@@ -1094,13 +1029,13 @@ final class SynthesisFilter
 				final float[] dp = d16[i];
 				float pcm_sample;
 
-				pcm_sample = (float)(((vp[6 + dvp] * dp[0]) +
+				pcm_sample = ((vp[6 + dvp] * dp[0]) +
 					(vp[5 + dvp] * dp[1]) +
 					(vp[4 + dvp] * dp[2]) +
 					(vp[3 + dvp] * dp[3]) +
 					(vp[2 + dvp] * dp[4]) +
 					(vp[1 + dvp] * dp[5]) +
-					(vp[0 + dvp] * dp[6]) +
+					(vp[dvp] * dp[6]) +
 					(vp[15 + dvp] * dp[7]) +
 					(vp[14 + dvp] * dp[8]) +
 					(vp[13 + dvp] * dp[9]) +
@@ -1110,9 +1045,9 @@ final class SynthesisFilter
 					(vp[9 + dvp] * dp[13]) +
 					(vp[8 + dvp] * dp[14]) +
 					(vp[7 + dvp] * dp[15])
-					) * scalefactor);
+					) * scalefactor;
 
-            tmpOut[i] = pcm_sample;
+            _tmpOut[i] = pcm_sample;
 			
 			dvp += 16;
 			} // for
@@ -1123,8 +1058,7 @@ final class SynthesisFilter
 	final float[] vp = actual_v;
 	
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
@@ -1132,14 +1066,14 @@ final class SynthesisFilter
 				final float[] dp = d16[i];
 				float pcm_sample;
 
-				pcm_sample = (float)(((vp[7 + dvp] * dp[0]) +
+				pcm_sample = ((vp[7 + dvp] * dp[0]) +
 					(vp[6 + dvp] * dp[1]) +
 					(vp[5 + dvp] * dp[2]) +
 					(vp[4 + dvp] * dp[3]) +
 					(vp[3 + dvp] * dp[4]) +
 					(vp[2 + dvp] * dp[5]) +
 					(vp[1 + dvp] * dp[6]) +
-					(vp[0 + dvp] * dp[7]) +
+					(vp[dvp] * dp[7]) +
 					(vp[15 + dvp] * dp[8]) +
 					(vp[14 + dvp] * dp[9]) +
 					(vp[13 + dvp] * dp[10]) +
@@ -1148,9 +1082,9 @@ final class SynthesisFilter
 					(vp[10 + dvp] * dp[13]) +
 					(vp[9 + dvp] * dp[14]) +
 					(vp[8 + dvp] * dp[15])
-					) * scalefactor);
+					) * scalefactor;
 
-            tmpOut[i] = pcm_sample;
+            _tmpOut[i] = pcm_sample;
 			
 			dvp += 16;
 			} // for
@@ -1160,8 +1094,7 @@ final class SynthesisFilter
 	final float[] vp = actual_v;
 	
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
@@ -1169,7 +1102,7 @@ final class SynthesisFilter
 				final float[] dp = d16[i];
 				float pcm_sample;
 
-				pcm_sample = (float)(((vp[8 + dvp] * dp[0]) +
+				pcm_sample = ((vp[8 + dvp] * dp[0]) +
 					(vp[7 + dvp] * dp[1]) +
 					(vp[6 + dvp] * dp[2]) +
 					(vp[5 + dvp] * dp[3]) +
@@ -1177,7 +1110,7 @@ final class SynthesisFilter
 					(vp[3 + dvp] * dp[5]) +
 					(vp[2 + dvp] * dp[6]) +
 					(vp[1 + dvp] * dp[7]) +
-					(vp[0 + dvp] * dp[8]) +
+					(vp[dvp] * dp[8]) +
 					(vp[15 + dvp] * dp[9]) +
 					(vp[14 + dvp] * dp[10]) +
 					(vp[13 + dvp] * dp[11]) +
@@ -1185,9 +1118,9 @@ final class SynthesisFilter
 					(vp[11 + dvp] * dp[13]) +
 					(vp[10 + dvp] * dp[14]) +
 					(vp[9 + dvp] * dp[15])
-					) * scalefactor);
+					) * scalefactor;
 
-            tmpOut[i] = pcm_sample;
+            _tmpOut[i] = pcm_sample;
 			
 			dvp += 16;
 			} // for
@@ -1198,8 +1131,7 @@ final class SynthesisFilter
 	final float[] vp = actual_v;
 	
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
@@ -1207,7 +1139,7 @@ final class SynthesisFilter
 				final float[] dp = d16[i];
 				float pcm_sample;
 
-				pcm_sample = (float)(((vp[9 + dvp] * dp[0]) +
+				pcm_sample = ((vp[9 + dvp] * dp[0]) +
 					(vp[8 + dvp] * dp[1]) +
 					(vp[7 + dvp] * dp[2]) +
 					(vp[6 + dvp] * dp[3]) +
@@ -1216,16 +1148,16 @@ final class SynthesisFilter
 					(vp[3 + dvp] * dp[6]) +
 					(vp[2 + dvp] * dp[7]) +
 					(vp[1 + dvp] * dp[8]) +
-					(vp[0 + dvp] * dp[9]) +
+					(vp[dvp] * dp[9]) +
 					(vp[15 + dvp] * dp[10]) +
 					(vp[14 + dvp] * dp[11]) +
 					(vp[13 + dvp] * dp[12]) +
 					(vp[12 + dvp] * dp[13]) +
 					(vp[11 + dvp] * dp[14]) +
 					(vp[10 + dvp] * dp[15])
-					) * scalefactor);
+					) * scalefactor;
 
-            tmpOut[i] = pcm_sample;
+            _tmpOut[i] = pcm_sample;
 			
 			dvp += 16;
 			} // for
@@ -1235,8 +1167,7 @@ final class SynthesisFilter
   {
 	final float[] vp = actual_v;	
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
@@ -1244,7 +1175,7 @@ final class SynthesisFilter
 				final float[] dp = d16[i];
 				float pcm_sample;
 
-				pcm_sample = (float)(((vp[10 + dvp] * dp[0]) +
+				pcm_sample = ((vp[10 + dvp] * dp[0]) +
 					(vp[9 + dvp] * dp[1]) +
 					(vp[8 + dvp] * dp[2]) +
 					(vp[7 + dvp] * dp[3]) +
@@ -1254,15 +1185,15 @@ final class SynthesisFilter
 					(vp[3 + dvp] * dp[7]) +
 					(vp[2 + dvp] * dp[8]) +
 					(vp[1 + dvp] * dp[9]) +
-					(vp[0 + dvp] * dp[10]) +
+					(vp[dvp] * dp[10]) +
 					(vp[15 + dvp] * dp[11]) +
 					(vp[14 + dvp] * dp[12]) +
 					(vp[13 + dvp] * dp[13]) +
 					(vp[12 + dvp] * dp[14]) +
 					(vp[11 + dvp] * dp[15])
-					) * scalefactor);
+					) * scalefactor;
 
-            tmpOut[i] = pcm_sample;
+            _tmpOut[i] = pcm_sample;
 			
 			dvp += 16;
 			} // for
@@ -1272,8 +1203,7 @@ final class SynthesisFilter
 	final float[] vp = actual_v;
 	
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
@@ -1281,7 +1211,7 @@ final class SynthesisFilter
 				final float[] dp = d16[i];
 				float pcm_sample;
 
-				pcm_sample = (float)(((vp[11 + dvp] * dp[0]) +
+				pcm_sample = ((vp[11 + dvp] * dp[0]) +
 					(vp[10 + dvp] * dp[1]) +
 					(vp[9 + dvp] * dp[2]) +
 					(vp[8 + dvp] * dp[3]) +
@@ -1292,14 +1222,14 @@ final class SynthesisFilter
 					(vp[3 + dvp] * dp[8]) +
 					(vp[2 + dvp] * dp[9]) +
 					(vp[1 + dvp] * dp[10]) +
-					(vp[0 + dvp] * dp[11]) +
+					(vp[dvp] * dp[11]) +
 					(vp[15 + dvp] * dp[12]) +
 					(vp[14 + dvp] * dp[13]) +
 					(vp[13 + dvp] * dp[14]) +
 					(vp[12 + dvp] * dp[15])
-					) * scalefactor);
+					) * scalefactor;
 
-            tmpOut[i] = pcm_sample;
+            _tmpOut[i] = pcm_sample;
 			
 			dvp += 16;
 			} // for
@@ -1308,8 +1238,7 @@ final class SynthesisFilter
   {
 	final float[] vp = actual_v;	
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
@@ -1317,7 +1246,7 @@ final class SynthesisFilter
 			    final float[] dp = d16[i];
 				float pcm_sample;
 
-				pcm_sample = (float)(((vp[12 + dvp] * dp[0]) +
+				pcm_sample = ((vp[12 + dvp] * dp[0]) +
 					(vp[11 + dvp] * dp[1]) +
 					(vp[10 + dvp] * dp[2]) +
 					(vp[9 + dvp] * dp[3]) +
@@ -1329,13 +1258,13 @@ final class SynthesisFilter
 					(vp[3 + dvp] * dp[9]) +
 					(vp[2 + dvp] * dp[10]) +
 					(vp[1 + dvp] * dp[11]) +
-					(vp[0 + dvp] * dp[12]) +
+					(vp[dvp] * dp[12]) +
 					(vp[15 + dvp] * dp[13]) +
 					(vp[14 + dvp] * dp[14]) +
 					(vp[13 + dvp] * dp[15])
-					) * scalefactor);
+					) * scalefactor;
 
-            tmpOut[i] = pcm_sample;
+            _tmpOut[i] = pcm_sample;
 			
 			dvp += 16;
 			} // for
@@ -1345,8 +1274,7 @@ final class SynthesisFilter
 	final float[] vp = actual_v;
 	
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
@@ -1354,7 +1282,7 @@ final class SynthesisFilter
 				final float[] dp = d16[i];
 				float pcm_sample;
 
-				pcm_sample = (float)(((vp[13 + dvp] * dp[0]) +
+				pcm_sample = ((vp[13 + dvp] * dp[0]) +
 					(vp[12 + dvp] * dp[1]) +
 					(vp[11 + dvp] * dp[2]) +
 					(vp[10 + dvp] * dp[3]) +
@@ -1367,12 +1295,12 @@ final class SynthesisFilter
 					(vp[3 + dvp] * dp[10]) +
 					(vp[2 + dvp] * dp[11]) +
 					(vp[1 + dvp] * dp[12]) +
-					(vp[0 + dvp] * dp[13]) +
+					(vp[dvp] * dp[13]) +
 					(vp[15 + dvp] * dp[14]) +
 					(vp[14 + dvp] * dp[15])
-					) * scalefactor);
+					) * scalefactor;
 
-            tmpOut[i] = pcm_sample;
+            _tmpOut[i] = pcm_sample;
 			
 			dvp += 16;
 			} // for
@@ -1382,8 +1310,7 @@ final class SynthesisFilter
 	final float[] vp = actual_v;
 	
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
@@ -1391,7 +1318,7 @@ final class SynthesisFilter
 				final float[] dp = d16[i];
 				float pcm_sample;
 
-				pcm_sample = (float)(((vp[14 + dvp] * dp[0]) +
+				pcm_sample = ((vp[14 + dvp] * dp[0]) +
 					(vp[13 + dvp] * dp[1]) +
 					(vp[12 + dvp] * dp[2]) +
 					(vp[11 + dvp] * dp[3]) +
@@ -1405,11 +1332,11 @@ final class SynthesisFilter
 					(vp[3 + dvp] * dp[11]) +
 					(vp[2 + dvp] * dp[12]) +
 					(vp[1 + dvp] * dp[13]) +
-					(vp[0 + dvp] * dp[14]) +
+					(vp[dvp] * dp[14]) +
 					(vp[15 + dvp] * dp[15])
-					) * scalefactor);
+					) * scalefactor;
 
-            tmpOut[i] = pcm_sample;
+            _tmpOut[i] = pcm_sample;
 			
 			dvp += 16;
 			} // for
@@ -1419,15 +1346,14 @@ final class SynthesisFilter
 	final float[] vp = actual_v;
 		
 	//int inc = v_inc;
-	final float[] tmpOut = _tmpOut;
-	 int dvp =0;
+	  int dvp =0;
 	
 			// fat chance of having this loop unroll
 			for( int i=0; i<32; i++)
 			{
 				float pcm_sample;
-				final float dp[] = d16[i];
-				pcm_sample = (float)(((vp[15 + dvp] * dp[0]) +
+				final float[] dp = d16[i];
+				pcm_sample = ((vp[15 + dvp] * dp[0]) +
 					(vp[14 + dvp] * dp[1]) +
 					(vp[13 + dvp] * dp[2]) +
 					(vp[12 + dvp] * dp[3]) +
@@ -1442,106 +1368,45 @@ final class SynthesisFilter
 					(vp[3 + dvp] * dp[12]) +
 					(vp[2 + dvp] * dp[13]) +
 					(vp[1 + dvp] * dp[14]) +
-					(vp[0 + dvp] * dp[15])
-					) * scalefactor);
+					(vp[dvp] * dp[15])
+					) * scalefactor;
 
-            tmpOut[i] = pcm_sample;			
+            _tmpOut[i] = pcm_sample;
 			dvp += 16;
 			} // for
 		}
 	 	 	 	 
 private void compute_pcm_samples(Obuffer buffer)
 {
-	
-	switch (actual_write_pos)
-	{
-	case 0: 
-		compute_pcm_samples0(buffer);
-		break;
-	case 1: 
-		compute_pcm_samples1(buffer);
-		break;
-	case 2: 
-		compute_pcm_samples2(buffer);
-		break;
-	case 3: 
-		compute_pcm_samples3(buffer);
-		break;
-	case 4: 
-		compute_pcm_samples4(buffer);
-		break;
-	case 5: 
-		compute_pcm_samples5(buffer);
-		break;
-	case 6: 
-		compute_pcm_samples6(buffer);
-		break;
-	case 7: 
-		compute_pcm_samples7(buffer);
-		break;
-	case 8: 
-		compute_pcm_samples8(buffer);
-		break;
-	case 9: 
-		compute_pcm_samples9(buffer);
-		break;
-	case 10: 
-		compute_pcm_samples10(buffer);
-		break;
-	case 11: 
-		compute_pcm_samples11(buffer);
-		break;
-	case 12: 
-		compute_pcm_samples12(buffer);
-		break;
-	case 13: 
-		compute_pcm_samples13(buffer);
-		break;
-	case 14: 
-		compute_pcm_samples14(buffer);
-		break;
-	case 15: 
-		compute_pcm_samples15(buffer);
-		break;
+
+	switch (actual_write_pos) {
+		case 0 -> compute_pcm_samples0(buffer);
+		case 1 -> compute_pcm_samples1(buffer);
+		case 2 -> compute_pcm_samples2(buffer);
+		case 3 -> compute_pcm_samples3(buffer);
+		case 4 -> compute_pcm_samples4(buffer);
+		case 5 -> compute_pcm_samples5(buffer);
+		case 6 -> compute_pcm_samples6(buffer);
+		case 7 -> compute_pcm_samples7(buffer);
+		case 8 -> compute_pcm_samples8(buffer);
+		case 9 -> compute_pcm_samples9(buffer);
+		case 10 -> compute_pcm_samples10(buffer);
+		case 11 -> compute_pcm_samples11(buffer);
+		case 12 -> compute_pcm_samples12(buffer);
+		case 13 -> compute_pcm_samples13(buffer);
+		case 14 -> compute_pcm_samples14(buffer);
+		case 15 -> compute_pcm_samples15(buffer);
 	}
 		
 	if (buffer!=null)
 	{		
 		buffer.appendSamples(channel, _tmpOut);
 	}
-	 
-/*
-	 // MDM: I was considering putting in quality control for
-	 // low-spec CPUs, but the performance gain (about 10-15%) 
-	 // did not justify the considerable drop in audio quality.
-		switch (inc)
-		{
-		case 16:		 
-		    buffer.appendSamples(channel, tmpOut);
-		    break;
-		case 32:
-			for (int i=0; i<16; i++)
-			{
-				buffer.append(channel, (short)tmpOut[i]);
-				buffer.append(channel, (short)tmpOut[i]); 
-			}
-			break;			
-		case 64:
-			for (int i=0; i<8; i++)
-			{
-				buffer.append(channel, (short)tmpOut[i]);
-				buffer.append(channel, (short)tmpOut[i]);
-				buffer.append(channel, (short)tmpOut[i]);
-				buffer.append(channel, (short)tmpOut[i]); 
-			}
-			break;			
-	
-		}
-*/	 
-  }
+
+}
 
   /**
-   * Calculate 32 PCM samples and put the into the Obuffer-object.
+   * Calculate 32 PCM samples and put the into the Buffer-object.
    */
 	
   public void calculate_pcm_samples(Obuffer buffer)
@@ -1600,14 +1465,14 @@ private void compute_pcm_samples(Obuffer buffer)
   // as in Annex 3-B.3 of the ISO/IEC DIS 11172-3 
   // private float d[] = {0.000000000, -4.000442505};
   
-  private static float d[] = null;
+  private static float[] d = null;
   
   /** 
-   * d[] split into subarrays of length 16. This provides for
-   * more faster access by allowing a block of 16 to be addressed
+   * d[] split into sub-arrays of length 16. This provides for
+   * faster access by allowing a block of 16 to be addressed
    * with constant offset. 
    **/
-  private static float d16[][] = null;	
+  private static float[][] d16 = null;
   
   /**
    * Loads the data for the d[] from the resource SFd.ser. 
@@ -1652,13 +1517,13 @@ private void compute_pcm_samples(Obuffer buffer)
 	}
 	
 	/**
-	 * Returns a subarray of an existing array.
+	 * Returns a sub-array of an existing array.
 	 * 
-	 * @param array	The array to retrieve a subarra from.
+	 * @param array	The array to retrieve a sub-array from.
 	 * @param offs	The offset in the array that corresponds to
-	 *				the first index of the subarray.
-	 * @param len	The number of indeces in the subarray.
-	 * @return The subarray, which may be of length 0.
+	 *				the first index of the sub-array.
+	 * @param len	The number of indexes in the sub-array.
+	 * @return The sub-array, which may be of length 0.
 	 */
 	static private float[] subArray(final float[] array, final int offs, int len)
 	{
@@ -1671,147 +1536,12 @@ private void compute_pcm_samples(Obuffer buffer)
 			len = 0;
 		
 		float[] subarray = new float[len];
-		for (int i=0; i<len; i++)
-		{
-			subarray[i] = array[offs+i];
-		}
+		System.arraycopy(array, offs, subarray, 0, len);
 		
 		return subarray;
 	}
 	
 	// The original data for d[]. This data is loaded from a file
-	// to reduce the overall package size and to improve performance. 
-/*  
-  static final float d_data[] = {
-  	0.000000000f, -0.000442505f,  0.003250122f, -0.007003784f,
-  	0.031082153f, -0.078628540f,  0.100311279f, -0.572036743f,
-  	1.144989014f,  0.572036743f,  0.100311279f,  0.078628540f,
-  	0.031082153f,  0.007003784f,  0.003250122f,  0.000442505f,
-   -0.000015259f, -0.000473022f,  0.003326416f, -0.007919312f,
-  	0.030517578f, -0.084182739f,  0.090927124f, -0.600219727f,
-  	1.144287109f,  0.543823242f,  0.108856201f,  0.073059082f,
-  	0.031478882f,  0.006118774f,  0.003173828f,  0.000396729f,
-   -0.000015259f, -0.000534058f,  0.003387451f, -0.008865356f,
-  	0.029785156f, -0.089706421f,  0.080688477f, -0.628295898f,
-  	1.142211914f,  0.515609741f,  0.116577148f,  0.067520142f,
-    0.031738281f,  0.005294800f,  0.003082275f,  0.000366211f,
-   -0.000015259f, -0.000579834f,  0.003433228f, -0.009841919f,
-    0.028884888f, -0.095169067f,  0.069595337f, -0.656219482f,
-  	1.138763428f,  0.487472534f,  0.123474121f,  0.061996460f,
-    0.031845093f,  0.004486084f,  0.002990723f,  0.000320435f,
-   -0.000015259f, -0.000625610f,  0.003463745f, -0.010848999f,
-    0.027801514f, -0.100540161f,  0.057617188f, -0.683914185f,
-  	1.133926392f,  0.459472656f,  0.129577637f,  0.056533813f,
-  	0.031814575f,  0.003723145f,  0.002899170f,  0.000289917f,
-   -0.000015259f, -0.000686646f,  0.003479004f, -0.011886597f,
-  	0.026535034f, -0.105819702f,  0.044784546f, -0.711318970f,
-  	1.127746582f,  0.431655884f,  0.134887695f,  0.051132202f,
-  	0.031661987f,  0.003005981f,  0.002792358f,  0.000259399f,
-   -0.000015259f, -0.000747681f,  0.003479004f, -0.012939453f,
-  	0.025085449f, -0.110946655f,  0.031082153f, -0.738372803f,
-    1.120223999f,  0.404083252f,  0.139450073f,  0.045837402f,
-    0.031387329f,  0.002334595f,  0.002685547f,  0.000244141f,
-   -0.000030518f, -0.000808716f,  0.003463745f, -0.014022827f,
-    0.023422241f, -0.115921021f,  0.016510010f, -0.765029907f,
-  	1.111373901f,  0.376800537f,  0.143264771f,  0.040634155f,
-    0.031005859f,  0.001693726f,  0.002578735f,  0.000213623f,
-   -0.000030518f, -0.000885010f,  0.003417969f, -0.015121460f,
-  	0.021575928f, -0.120697021f,  0.001068115f, -0.791213989f,
-    1.101211548f,  0.349868774f,  0.146362305f,  0.035552979f,
-  	0.030532837f,  0.001098633f,  0.002456665f,  0.000198364f,
-   -0.000030518f, -0.000961304f,  0.003372192f, -0.016235352f,
-    0.019531250f, -0.125259399f, -0.015228271f, -0.816864014f,
-  	1.089782715f,  0.323318481f,  0.148773193f,  0.030609131f,
-  	0.029937744f,  0.000549316f,  0.002349854f,  0.000167847f,
-   -0.000030518f, -0.001037598f,  0.003280640f, -0.017349243f,
-  	0.017257690f, -0.129562378f, -0.032379150f, -0.841949463f,
-    1.077117920f,  0.297210693f,  0.150497437f,  0.025817871f,
-    0.029281616f,  0.000030518f,  0.002243042f,  0.000152588f,
-   -0.000045776f, -0.001113892f,  0.003173828f, -0.018463135f,
-  	0.014801025f, -0.133590698f, -0.050354004f, -0.866363525f,
-  	1.063217163f,  0.271591187f,  0.151596069f,  0.021179199f,
-  	0.028533936f, -0.000442505f,  0.002120972f,  0.000137329f,
-   -0.000045776f, -0.001205444f,  0.003051758f, -0.019577026f,
-  	0.012115479f, -0.137298584f, -0.069168091f, -0.890090942f,
-  	1.048156738f,  0.246505737f,  0.152069092f,  0.016708374f,
-  	0.027725220f, -0.000869751f,  0.002014160f,  0.000122070f,
-   -0.000061035f, -0.001296997f,  0.002883911f, -0.020690918f,
-    0.009231567f, -0.140670776f, -0.088775635f, -0.913055420f,
-  	1.031936646f,  0.221984863f,  0.151962280f,  0.012420654f,
-    0.026840210f, -0.001266479f,  0.001907349f,  0.000106812f,
-   -0.000061035f, -0.001388550f,  0.002700806f, -0.021789551f,
-  	0.006134033f, -0.143676758f, -0.109161377f, -0.935195923f,
-    1.014617920f,  0.198059082f,  0.151306152f,  0.008316040f,
-  	0.025909424f, -0.001617432f,  0.001785278f,  0.000106812f,
-   -0.000076294f, -0.001480103f,  0.002487183f, -0.022857666f,
-  	0.002822876f, -0.146255493f, -0.130310059f, -0.956481934f,
-  	0.996246338f,  0.174789429f,  0.150115967f,  0.004394531f,
-    0.024932861f, -0.001937866f,  0.001693726f,  0.000091553f,
-   -0.000076294f, -0.001586914f,  0.002227783f, -0.023910522f,
-   -0.000686646f, -0.148422241f, -0.152206421f, -0.976852417f,
-    0.976852417f,  0.152206421f,  0.148422241f,  0.000686646f,
-  	0.023910522f, -0.002227783f,  0.001586914f,  0.000076294f,
-   -0.000091553f, -0.001693726f,  0.001937866f, -0.024932861f,
-   -0.004394531f, -0.150115967f, -0.174789429f, -0.996246338f,
-    0.956481934f,  0.130310059f,  0.146255493f, -0.002822876f,
-    0.022857666f, -0.002487183f,  0.001480103f,  0.000076294f,
-   -0.000106812f, -0.001785278f,  0.001617432f, -0.025909424f,
-   -0.008316040f, -0.151306152f, -0.198059082f, -1.014617920f,
-    0.935195923f,  0.109161377f,  0.143676758f, -0.006134033f,
-    0.021789551f, -0.002700806f,  0.001388550f,  0.000061035f,
-   -0.000106812f, -0.001907349f,  0.001266479f, -0.026840210f,
-   -0.012420654f, -0.151962280f, -0.221984863f, -1.031936646f,
-  	0.913055420f,  0.088775635f,  0.140670776f, -0.009231567f,
-  	0.020690918f, -0.002883911f,  0.001296997f,  0.000061035f,
-   -0.000122070f, -0.002014160f,  0.000869751f, -0.027725220f,
-   -0.016708374f, -0.152069092f, -0.246505737f, -1.048156738f,
-    0.890090942f,  0.069168091f,  0.137298584f, -0.012115479f,
-  	0.019577026f, -0.003051758f,  0.001205444f,  0.000045776f,
-   -0.000137329f, -0.002120972f,  0.000442505f, -0.028533936f,
-   -0.021179199f, -0.151596069f, -0.271591187f, -1.063217163f,
-    0.866363525f,  0.050354004f,  0.133590698f, -0.014801025f,
-    0.018463135f, -0.003173828f,  0.001113892f,  0.000045776f,
-   -0.000152588f, -0.002243042f, -0.000030518f, -0.029281616f,
-   -0.025817871f, -0.150497437f, -0.297210693f, -1.077117920f,
-  	0.841949463f,  0.032379150f,  0.129562378f, -0.017257690f,
-  	0.017349243f, -0.003280640f,  0.001037598f,  0.000030518f,
-   -0.000167847f, -0.002349854f, -0.000549316f, -0.029937744f,
-   -0.030609131f, -0.148773193f, -0.323318481f, -1.089782715f,
-  	0.816864014f,  0.015228271f,  0.125259399f, -0.019531250f,
-    0.016235352f, -0.003372192f,  0.000961304f,  0.000030518f,
-   -0.000198364f, -0.002456665f, -0.001098633f, -0.030532837f,
-   -0.035552979f, -0.146362305f, -0.349868774f, -1.101211548f,
-  	0.791213989f, -0.001068115f,  0.120697021f, -0.021575928f,
-  	0.015121460f, -0.003417969f,  0.000885010f,  0.000030518f,
-   -0.000213623f, -0.002578735f, -0.001693726f, -0.031005859f,
-   -0.040634155f, -0.143264771f, -0.376800537f, -1.111373901f,
-    0.765029907f, -0.016510010f,  0.115921021f, -0.023422241f,
-    0.014022827f, -0.003463745f,  0.000808716f,  0.000030518f,
-   -0.000244141f, -0.002685547f, -0.002334595f, -0.031387329f,
-   -0.045837402f, -0.139450073f, -0.404083252f, -1.120223999f,
-    0.738372803f, -0.031082153f,  0.110946655f, -0.025085449f,
-  	0.012939453f, -0.003479004f,  0.000747681f,  0.000015259f,
-   -0.000259399f, -0.002792358f, -0.003005981f, -0.031661987f,
-   -0.051132202f, -0.134887695f, -0.431655884f, -1.127746582f,
-  	0.711318970f, -0.044784546f,  0.105819702f, -0.026535034f,
-    0.011886597f, -0.003479004f,  0.000686646f,  0.000015259f,
-   -0.000289917f, -0.002899170f, -0.003723145f, -0.031814575f,
-   -0.056533813f, -0.129577637f, -0.459472656f, -1.133926392f,
-    0.683914185f, -0.057617188f,  0.100540161f, -0.027801514f,
-  	0.010848999f, -0.003463745f,  0.000625610f,  0.000015259f,
-   -0.000320435f, -0.002990723f, -0.004486084f, -0.031845093f,
-   -0.061996460f, -0.123474121f, -0.487472534f, -1.138763428f,
-  	0.656219482f, -0.069595337f,  0.095169067f, -0.028884888f,
-  	0.009841919f, -0.003433228f,  0.000579834f,  0.000015259f,
-   -0.000366211f, -0.003082275f, -0.005294800f, -0.031738281f,
-   -0.067520142f, -0.116577148f, -0.515609741f, -1.142211914f,
-  	0.628295898f, -0.080688477f,  0.089706421f, -0.029785156f,
-  	0.008865356f, -0.003387451f,  0.000534058f,  0.000015259f,
-   -0.000396729f, -0.003173828f, -0.006118774f, -0.031478882f,
-   -0.073059082f, -0.108856201f, -0.543823242f, -1.144287109f,
-  	0.600219727f, -0.090927124f,  0.084182739f, -0.030517578f,
-	0.007919312f, -0.003326416f,  0.000473022f,  0.000015259f
-	};
-  */
-  
+	// to reduce the overall package size and to improve performance.
+
 }
