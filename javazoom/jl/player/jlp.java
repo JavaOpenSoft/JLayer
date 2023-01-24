@@ -147,8 +147,7 @@ public class jlp
 
 		URL url = new URL(fFilename);
 		InputStream fin = url.openStream();
-		BufferedInputStream bin = new BufferedInputStream(fin);
-		return bin;
+		return new java.io.BufferedInputStream(fin);
 	}
 
 	/**
@@ -158,8 +157,7 @@ public class jlp
 		throws IOException
 	{
 		FileInputStream fin = new FileInputStream(fFilename);
-		BufferedInputStream bin = new BufferedInputStream(fin);
-		return bin;
+		return new java.io.BufferedInputStream(fin);
 	}
 
 	protected AudioDevice getAudioDevice()

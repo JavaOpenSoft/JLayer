@@ -470,11 +470,7 @@ final class huffcodetab
 
      /* Lookup in Huffman table. */
 
-	 /*int bitsAvailable = 0;	 
-	 int bitIndex = 0;
-	 
-	 int bits[] = bitbuf;*/
-   	 do 
+	  do
 	 {
 	    if (h.val[point][0]==0)
 		{   /*end of tree*/
@@ -486,14 +482,7 @@ final class huffcodetab
 	    
 		// hget1bit() is called thousands of times, and so needs to be
 		// ultra fast. 
-		/*
-		if (bitIndex==bitsAvailable)
-		{
-			bitsAvailable = br.readBits(bits, 32);			
-			bitIndex = 0;
-		}
-		*/
-		//if (bits[bitIndex++]!=0)
+		 //if (bits[bitIndex++]!=0)
 		if (br.hget1bit()!=0)
 		{
 		   while (h.val[point][1] >= MXOFF) point += h.val[point][1];
@@ -509,12 +498,7 @@ final class huffcodetab
 	 } while ((level !=0 )  || (point < 0 /*ht[0].treelen*/) );
 		
 		// put back any bits not consumed
-	/*	
-	 int unread = (bitsAvailable-bitIndex);
-		if (unread>0)
-			br.rewindNbits(unread);
-	 */
-  	  /* Process sign encodings for quadruples tables. */
+	  /* Process sign encodings for quadruples tables. */
       // System.out.println(h.tablename);
   	  if (h.tablename0 == '3' && (h.tablename1 == '2' || h.tablename1 == '3'))
 	  {

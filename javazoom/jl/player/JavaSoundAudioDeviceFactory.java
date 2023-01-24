@@ -59,8 +59,7 @@ public class JavaSoundAudioDeviceFactory extends AudioDeviceFactory
 		ClassLoader loader = getClass().getClassLoader();
 		try
 		{
-			JavaSoundAudioDevice dev = (JavaSoundAudioDevice)instantiate(loader, DEVICE_CLASS_NAME);
-			return dev;
+			return (javazoom.jl.player.JavaSoundAudioDevice)instantiate(loader, DEVICE_CLASS_NAME);
 		}
 		catch (Exception | LinkageError ex)
 		{

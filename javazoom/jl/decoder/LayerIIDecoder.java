@@ -676,16 +676,7 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
 			samplecode += samplecode << 1;
 			float[] target = samples;
 			float[] source = groupingtable[0];
-		  /*
-		  int tmp = 0;
-			int temp = 0;
-			target[tmp++] = source[samplecode + temp];
-			temp++;
-			target[tmp++] = source[samplecode + temp];
-			temp++;
-			target[tmp] = source[samplecode + temp];
-			*/
-			//Bugfix:
+			 //Bugfix:
 			int tmp = 0;
 			int temp = samplecode;
 			
@@ -984,19 +975,7 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
 	  		int samplecode = stream.get_bits(channel2_codelength[0]);
 	  		// create requantized samples:
 	  		samplecode += samplecode << 1;
-	  	/*
-	  		float[] target = channel2_samples;
-	  		float[] source = channel2_groupingtable[0];
-			int tmp = 0;
-			int temp = 0;
-	  		target[tmp++] = source[samplecode + temp];
-			temp++;
-	  		target[tmp++] = source[samplecode + temp];
-			temp++;
-	  		target[tmp] = source[samplecode + temp];
-	  		// memcpy (channel2_samples, channel2_groupingtable + samplecode, 3 * sizeof (real));
-	  	*/
-	  	float[] target = channel2_samples;
+			 float[] target = channel2_samples;
 	    float[] source = groupingtable[1];
 			int tmp = 0;
 			int temp = samplecode;

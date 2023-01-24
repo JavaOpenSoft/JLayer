@@ -144,10 +144,8 @@ public class JavaLayerUtils
 		InputStream str = getResourceAsStream(name);
 		if (str==null)
 			throw new IOException("unable to load resource '"+name+"'");
-		
-		Object obj = deserializeArray(str, elemType, length);
-		
-		return obj;
+
+		return deserializeArray(str, elemType, length);
 	}	
 	
 	static public void serialize(OutputStream out, Object obj)

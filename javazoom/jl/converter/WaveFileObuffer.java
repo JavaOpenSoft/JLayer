@@ -91,18 +91,7 @@ public class WaveFileObuffer extends Obuffer
     
 	rc = outWave.WriteData(buffer, bufferp[0]);
 	// REVIEW: handle RiffFile errors. 
-	/*
-    for (int j=0;j<bufferp[0];j=j+2)
-    {
-        
-        //myBuffer[0] = (short)(((buffer[j]>>8)&0x000000FF) | ((buffer[j]<<8)&0x0000FF00));
-        //myBuffer[1] = (short) (((buffer[j+1]>>8)&0x000000FF) | ((buffer[j+1]<<8)&0x0000FF00));
-        myBuffer[0] = buffer[j];
-        myBuffer[1] = buffer[j+1];
-        rc = outWave.WriteData (myBuffer,2);
-    }
-	*/
-    for (int i = 0; i < channels; ++i) bufferp[i] = (short)i;
+      for (int i = 0; i < channels; ++i) bufferp[i] = (short)i;
   }
 
   public void close()

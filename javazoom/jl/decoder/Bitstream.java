@@ -110,8 +110,6 @@ public final class Bitstream implements BitstreamErrors
 	 *
 	 */
 	private boolean			single_ch_mode;
-  //private int 			current_frame_number;
-  //private int				last_frame_number;
 
 	private final int		bitmask[] = {0,	// dummy
 	 0x00000001, 0x00000003, 0x00000007, 0x0000000F,
@@ -149,8 +147,6 @@ public final class Bitstream implements BitstreamErrors
 		source = new PushbackInputStream(in, BUFFER_INT_SIZE*4);
 		
 		closeFrame();
-		//current_frame_number = -1;
-		//last_frame_number = -1;
 	}
 
 	/**
@@ -235,8 +231,7 @@ public final class Bitstream implements BitstreamErrors
 		if (rawid3v2 == null) return null;
 		else
 		{
-			ByteArrayInputStream bain = new ByteArrayInputStream(rawid3v2);		
-			return bain;
+			return new java.io.ByteArrayInputStream(rawid3v2);
 		}
 	}
 
@@ -371,17 +366,15 @@ public final class Bitstream implements BitstreamErrors
 		{
 			source.unread(syncbuf, 0, read);
 		}
-		catch (IOException ex)
+		catch (IOException ignored)
 		{
 		}
 
-		boolean sync = switch (read) {
+		return switch (read) {
 			case 0 -> true;
 			case 4 -> isSyncMark(headerstring, syncmode, syncword);
 			default -> false;
 		};
-
-		return sync;
 	}
 
 
@@ -439,9 +432,6 @@ public final class Bitstream implements BitstreamErrors
 		}
 		while (!sync);
 
-		//current_frame_number++;
-		//if (last_frame_number < current_frame_number) last_frame_number = current_frame_number;
-
 		return headerstring;
 	}
 
@@ -498,16 +488,8 @@ public final class Bitstream implements BitstreamErrors
 	int bytesize = framesize;
 
 	// Check ID3v1 TAG (True only if last frame).
-	//for (int t=0;t<(byteread.length)-2;t++)
-	//{
-	//	if ((byteread[t]=='T') && (byteread[t+1]=='A') && (byteread[t+2]=='G'))
-	//	{
-	//		System.out.println("ID3v1 detected at offset "+t);
-	//		throw newBitstreamException(INVALIDFRAME, null);
-	//	} 	
-	//}
-	
-	for (int k=0;k<bytesize;k=k+4)
+
+	  for (int k=0;k<bytesize;k=k+4)
 	{
 		int convert = 0;
 		byte b0 = 0;

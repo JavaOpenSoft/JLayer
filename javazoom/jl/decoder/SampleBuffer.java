@@ -106,9 +106,6 @@ public class SampleBuffer extends Obuffer
    */
   public void write_buffer(int val)
   {
-				  
-	//for (int i = 0; i < channels; ++i) 
-	//	bufferp[i] = (short)i;
 
   }
 

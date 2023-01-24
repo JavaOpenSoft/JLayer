@@ -191,9 +191,8 @@ public class Converter
 		// ensure name is abstract path name
 		File file = new File(fileName);
 		InputStream fileIn = new FileInputStream(file);
-		BufferedInputStream bufIn = new BufferedInputStream(fileIn);
 
-		return bufIn;
+		return new java.io.BufferedInputStream(fileIn);
 	}
 
 

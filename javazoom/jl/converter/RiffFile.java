@@ -468,8 +468,7 @@ public class RiffFile
    {
       byte[] p = {0x20,0x20,0x20,0x20};
 	  ChunkName.getBytes(0,4,p,0);
-	  int ret = (((p[0] << 24)& 0xFF000000) | ((p[1] << 16)&0x00FF0000) | ((p[2] << 8)&0x0000FF00) | (p[3]&0x000000FF));
-      return ret;
+       return (((p[0] << 24)& 0xFF000000) | ((p[1] << 16)&0x00FF0000) | ((p[2] << 8)&0x0000FF00) | (p[3]&0x000000FF));
    }
 
 }

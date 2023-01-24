@@ -55,11 +55,6 @@ public final class Equalizer
 	public Equalizer()
 	{		
 	}
-	
-//	private Equalizer(float b1, float b2, float b3, float b4, float b5,
-//					 float b6, float b7, float b8, float b9, float b10, float b11,
-//					 float b12, float b13, float b14, float b15, float b16,
-//					 float b17, float b18, float b19, float b20);
 
 	public Equalizer(float[] settings)
 	{
@@ -85,9 +80,8 @@ public final class Equalizer
 	public void setFrom(EQFunction eq)
 	{
 		reset();
-		int max = BANDS;
-		
-		for (int i=0; i<max; i++)
+
+		for (int i = 0; i< BANDS; i++)
 		{
 			settings[i] = limit(eq.getBand(i));
 		}		
@@ -182,7 +176,7 @@ public final class Equalizer
 	float[] getBandFactors()
 	{
 		float[] factors = new float[BANDS];
-		for (int i=0, maxCount=BANDS; i<maxCount; i++)
+		for (int i = 0; i< BANDS; i++)
 		{
 			factors[i] = getBandFactor(settings[i]);
 		}
@@ -200,9 +194,8 @@ public final class Equalizer
 	{
 		if (eq==BAND_NOT_PRESENT)
 			return 0.0f;
-		
-		float f = (float)Math.pow(2.0, eq);
-		return f;
+
+		return (float)Math.pow(2.0, eq);
 	}
 	
 	
