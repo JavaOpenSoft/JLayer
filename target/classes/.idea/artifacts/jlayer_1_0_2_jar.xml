@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="jlayer-1.0.2:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/jlayer_1_0_2_jar</output-path>
+    <root id="archive" name="jlayer-1.0.2.jar">
+      <element id="module-output" name="JLayer-1.0.2" />
+    </root>
+  </artifact>
+</component>
