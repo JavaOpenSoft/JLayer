@@ -1,6 +1,6 @@
 /*
  * 11/19/04 1.0 moved to LGPL.
- * 12/12/99 Initial implementation.		mdm@techie.com. 
+ * 12/12/99 Initial implementation.		mdm@techie.com.
  *-----------------------------------------------------------------------
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as published
@@ -22,114 +22,99 @@ package javazoom.jl.decoder;
 
 
 /**
- * A Type-safe representation of the the supported output channel
- * constants. 
- * 
- * This class is immutable and, hence, is thread safe. 
- * 
- * @author	Mat McGowan 12/12/99 
- * @since	0.0.7
+ * A Type-safe representation of the the supported output channel constants.
+ * <p>
+ * This class is immutable and, hence, is thread safe.
+ *
+ * @author Mat McGowan 12/12/99
+ * @since 0.0.7
  */
-public class OutputChannels
-{		
-	/**
-	 * Flag to indicate output should include both channels. 
-	 */
-	public static final int	BOTH_CHANNELS = 0;
-		
-	/**
-	 * Flag to indicate output should include the left channel only. 
-	 */
-	public static final int	LEFT_CHANNEL = 1;
+public class OutputChannels {
+    /**
+     * Flag to indicate output should include both channels.
+     */
+    public static final int BOTH_CHANNELS = 0;
 
-	/**
-	 * Flag to indicate output should include the right channel only. 
-	 */
-	public static final int	RIGHT_CHANNEL = 2;
-		
-	/**
-	 * Flag to indicate output is mono. 
-	 */
-	public static final int	DOWNMIX_CHANNELS = 3;
+    /**
+     * Flag to indicate output should include the left channel only.
+     */
+    public static final int LEFT_CHANNEL = 1;
 
-	
-	public static final OutputChannels LEFT = new OutputChannels(LEFT_CHANNEL);
-	public static final OutputChannels RIGHT = new OutputChannels(RIGHT_CHANNEL);
-	public static final OutputChannels BOTH = new OutputChannels(BOTH_CHANNELS);
-	public static final OutputChannels DOWNMIX = new OutputChannels(DOWNMIX_CHANNELS);
-				
-	
-	private /*final*/ int	outputChannels;
-			
-	/**
-	 * Creates an <code>OutputChannels</code> instance
-	 * corresponding to the given channel code.
-	 * 
-	 * @param	code one of the OutputChannels channel code constants.
-	 * 
-	 * @throws	IllegalArgumentException if code is not a valid
-	 *			channel code. 
-	 */
-	static public OutputChannels fromInt(int code)
-	{
-		return switch (code) {
-			case LEFT_CHANNEL -> LEFT;
-			case RIGHT_CHANNEL -> RIGHT;
-			case BOTH_CHANNELS -> BOTH;
-			case DOWNMIX_CHANNELS -> DOWNMIX;
-			default -> throw new IllegalArgumentException("Invalid channel code: " + code);
-		};
-	}
-		
-	private OutputChannels(int channels)
-	{
-		outputChannels = channels;
-			
-		if (channels<0 || channels>3)
-			throw new IllegalArgumentException("channels");
-	}
-		
-	/**
-	 * Retrieves the code representing the desired output channels.
-	 * Will be one of LEFT_CHANNEL, RIGHT_CHANNEL, BOTH_CHANNELS
-	 * or DOWNMIX_CHANNELS.
-	 * 
-	 * @return the channel code represented by this instance.
-	 */
-	public int getChannelsOutputCode()
-	{
-		return outputChannels;	
-	}
-		
-	/**
-	 * Retrieves the number of output channels represented 
-	 * by this channel output type.
-	 * 
-	 * @return	The number of output channels for this channel output
-	 *			type. This will be 2 for BOTH_CHANNELS only, and 1
-	 *			for all other types. 
-	 */
-	public int getChannelCount()
-	{
-		return (outputChannels==BOTH_CHANNELS) ?  2 : 1;
-	}
-		
-		
-	public boolean equals(Object o)
-	{
-		boolean equals = false;
-			
-		if (o instanceof javazoom.jl.decoder.OutputChannels oc)
-		{
-			equals = (oc.outputChannels == outputChannels);
-		}
-			
-		return equals;
-	}
-							  
-	public int hashCode()
-	{
-		return outputChannels;	
-	}
-		
+    /**
+     * Flag to indicate output should include the right channel only.
+     */
+    public static final int RIGHT_CHANNEL = 2;
+
+    /**
+     * Flag to indicate output is mono.
+     */
+    public static final int DOWNMIX_CHANNELS = 3;
+
+
+    public static final OutputChannels LEFT = new OutputChannels(LEFT_CHANNEL);
+    public static final OutputChannels RIGHT = new OutputChannels(RIGHT_CHANNEL);
+    public static final OutputChannels BOTH = new OutputChannels(BOTH_CHANNELS);
+    public static final OutputChannels DOWNMIX = new OutputChannels(DOWNMIX_CHANNELS);
+
+
+    private final /*final*/ int outputChannels;
+
+    private OutputChannels(int channels) {
+        outputChannels = channels;
+
+        if (channels < 0 || channels > 3)
+            throw new IllegalArgumentException("channels");
+    }
+
+    /**
+     * Creates an <code>OutputChannels</code> instance corresponding to the given channel code.
+     *
+     * @param    code one of the OutputChannels channel code constants.
+     * @throws IllegalArgumentException if code is not a valid channel code.
+     */
+    static public OutputChannels fromInt(int code) {
+        return switch (code) {
+            case LEFT_CHANNEL -> LEFT;
+            case RIGHT_CHANNEL -> RIGHT;
+            case BOTH_CHANNELS -> BOTH;
+            case DOWNMIX_CHANNELS -> DOWNMIX;
+            default -> throw new IllegalArgumentException("Invalid channel code: " + code);
+        };
+    }
+
+    /**
+     * Retrieves the code representing the desired output channels. Will be one of LEFT_CHANNEL, RIGHT_CHANNEL,
+     * BOTH_CHANNELS or DOWNMIX_CHANNELS.
+     *
+     * @return the channel code represented by this instance.
+     */
+    public int getChannelsOutputCode() {
+        return outputChannels;
+    }
+
+    /**
+     * Retrieves the number of output channels represented by this channel output type.
+     *
+     * @return The number of output channels for this channel output type. This will be 2 for BOTH_CHANNELS only, and 1
+     * for all other types.
+     */
+    public int getChannelCount() {
+        return (outputChannels == BOTH_CHANNELS) ? 2 : 1;
+    }
+
+
+    public boolean equals(Object o) {
+        boolean equals = false;
+
+        if (o instanceof javazoom.jl.decoder.OutputChannels oc) {
+            equals = (oc.outputChannels == outputChannels);
+        }
+
+        return equals;
+    }
+
+    public int hashCode() {
+        return outputChannels;
+    }
+
 }

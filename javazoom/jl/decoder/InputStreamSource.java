@@ -25,53 +25,45 @@ import java.io.InputStream;
 
 /**
  * <i>Work In Progress.</i>
- * 
+ * <p>
  * An instance of <code>InputStreamSource</code> implements a
  * <code>Source</code> that provides data from an <code>InputStream
- * </code>. Seeking functionality is not supported. 
- * 
+ * </code>. Seeking functionality is not supported.
+ *
  * @author MDM
  */
-public class InputStreamSource implements Source
-{
-	private final InputStream		in;
-	
-	public InputStreamSource(InputStream in)
-	{
-		if (in==null)
-			throw new NullPointerException("in");
-		
-		this.in = in;		
-	}
-	
-	public int read(byte[] b, int offs, int len)
-		throws IOException
-	{
-		return in.read(b, offs, len);
-	}
-	
-	public boolean willReadBlock()
-	{
-		return true;
-	}
-	
-	public boolean isSeekable()
-	{
-		return false;	
-	}
-	
-	public long	tell()
-	{
-		return -1;	
-	}
-	
-	public long	seek(long to)
-	{
-		return -1;	
-	}
-	
-	public long length()
-	{
-		return -1;
-	}
+public class InputStreamSource implements Source {
+    private final InputStream in;
+
+    public InputStreamSource(InputStream in) {
+        if (in == null)
+            throw new NullPointerException("in");
+
+        this.in = in;
+    }
+
+    public int read(byte[] b, int offs, int len)
+            throws IOException {
+        return in.read(b, offs, len);
+    }
+
+    public boolean willReadBlock() {
+        return true;
+    }
+
+    public boolean isSeekable() {
+        return false;
+    }
+
+    public long tell() {
+        return -1;
+    }
+
+    public long seek(long to) {
+        return -1;
+    }
+
+    public long length() {
+        return -1;
+    }
 }
