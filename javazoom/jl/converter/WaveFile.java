@@ -108,24 +108,6 @@ public class WaveFile extends RiffFile {
         return rc;
     }
 
-    /**
-     * public int OpenForRead (String Filename) { // Verify filename parameter as best we can... if (Filename == null) {
-     * return DDC_INVALID_CALL; } int retcode = Open ( Filename, RFM_READ );
-     * <p>
-     * if ( retcode == DDC_SUCCESS ) { retcode = Expect ( "WAVE", 4 );
-     * <p>
-     * if ( retcode == DDC_SUCCESS ) { retcode = Read(wave_format,24);
-     * <p>
-     * if ( retcode == DDC_SUCCESS && !wave_format.VerifyValidity() ) { // This isn't standard PCM, so we don't know
-     * what it is! retcode = DDC_FILE_ERROR; }
-     * <p>
-     * if ( retcode == DDC_SUCCESS ) { pcm_data_offset = CurrentFilePosition();
-     * <p>
-     * // Figure out number of samples from // file size, current file position, and // WAVE header. retcode = Read
-     * (pcm_data, 8 ); num_samples = filelength(fileno(file)) - CurrentFilePosition(); num_samples /= NumChannels();
-     * num_samples /= (BitsPerSample() / 8); } } } return retcode; }
-     */
-
     // [Hz]
     public int SamplingRate() {
         return wave_format.data.nSamplesPerSec;
