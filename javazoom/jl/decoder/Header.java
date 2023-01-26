@@ -34,6 +34,7 @@ package javazoom.jl.decoder;
 /**
  * Class for extracting information from a frame header.
  */
+@SuppressWarnings("ALL")
 public final class Header {
     public static final int[][] frequencies =
             {{22050, 24000, 16000, 1},

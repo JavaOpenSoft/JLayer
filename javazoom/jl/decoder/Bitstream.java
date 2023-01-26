@@ -46,6 +46,7 @@ import java.io.PushbackInputStream;
  * <b>REVIEW:</b> much of the parsing currently occurs in the
  * various decoders. This should be moved into this class and associated inner classes.
  */
+@SuppressWarnings("ALL")
 public final class Bitstream implements BitstreamErrors {
     /**
      * Maximum size of the frame buffer.

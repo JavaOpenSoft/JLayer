@@ -27,6 +27,7 @@ package javazoom.jl.decoder;
  * @author MDM
  * @since 0.0.5
  */
+@SuppressWarnings("DanglingJavadoc")
 public class Decoder implements DecoderErrors {
     static private final Params DEFAULT_PARAMS = new Params();
 
